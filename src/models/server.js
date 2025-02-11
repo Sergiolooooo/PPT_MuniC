@@ -10,6 +10,7 @@ class Server {
 
     //Rutas
     this.pathUsuarios = "/api/usuarios";
+    this.pathComercios = "/api/comercios";
 
     this.middleware();
     this.routes();
@@ -17,6 +18,7 @@ class Server {
 
   routes() {
     this.app.use(this.pathUsuarios, require("../routes/usuarios"));
+    this.app.use(this.pathComercios, require("../routes/comercios"));
   }
 
   middleware() {
