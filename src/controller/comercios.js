@@ -42,29 +42,10 @@ const getMethodById = async (req, res) => {
 
 const postMethod = async (req, res) => {
     try {
-        const { nombre_comercio, descripcion_comercio, latitud, longitud, telefono, video_youtube, id_categoria } = req.body;
-
-        // Validar los datos recibidos
-        let validation = tiposDatos.validateText(nombre_comercio);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
-
-        validation = tiposDatos.validateText(descripcion_comercio);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
-
-        validation = tiposDatos.validateText(latitud);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
-
-        validation = tiposDatos.validateText(longitud);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
-
-        validation = tiposDatos.validateId(telefono);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
-
-        validation = tiposDatos.validateText(video_youtube);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
-
-        validation = tiposDatos.validateId(id_categoria);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
+        const validation = tiposDatos.validateAll(req.body);
+        if (!validation.valid) {
+            return res.status(400).json({ success: false, error: validation.error });
+        }
 
         // Llamada a la función que interactúa con la base de datos
         const resultado = await CreateDatos(req.body);
@@ -75,11 +56,12 @@ const postMethod = async (req, res) => {
         } else {
             res.status(400).json({ success: false, message: 'Error al crear el comercio' });
         }
-        
+
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ success: false, error: error.message });
     }
 };
+
 
 const updateMethod = async (req, res) => {
     try {
