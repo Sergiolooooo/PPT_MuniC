@@ -12,10 +12,10 @@ const getRolById = async (id) => {
 
 const createRol = async (datos) => {
     const { nombre_rol } = datos;
-    const [[rows]] = await database.query('CALL Sp_CreateRol(?);', [nombre_rol]);
+    const [result] = await database.query('CALL Sp_CreateRol(?)', [nombre_rol]);
 
-    return rows;
-}
+    return result;
+};
 
 const updateRol = async (datos) => {
     const { id_rol, nombre_rol } = datos;
@@ -24,10 +24,10 @@ const updateRol = async (datos) => {
     return rows;
 }
 
-const deleteRol = async (id_rol) => {
-    const [[rows]] = await database.query('CALL Sp_DeleteRol(?);', [id_rol]);
+const deleteRol = async (id) => {
+    const [rows] = await database.query('CALL Sp_DeleteRol(?)', [id]);
     return rows;
-}
+};
 
 module.exports = {
     getRoles,
