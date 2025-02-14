@@ -2,19 +2,21 @@ const { Router } = require('express');
 const { validateToken } = require('../validaciones/validateToken');
 
 const {
-    postMethod
+    postMethod,
+    getMethod,
+    getMethodById,
+    updateMethod,
+    deleteMethod
 } = require('../controller/comercios');
 
 const router = Router();
 
-
 //router.get('/',validateToken ,getMethod); ASI SE USA EL VALIDATE TOKEN
 
-router.get('/', );
-router.get('/:id', );
+router.get('/', getMethod);
+router.get('/:id', getMethodById);
 router.post('/', postMethod);
-router.post('/login', );
-router.put('/', );
-router.delete('/:id', );
+router.put('/:id', updateMethod);
+router.delete('/:id', deleteMethod);
 
 module.exports = router;
