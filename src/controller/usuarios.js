@@ -35,66 +35,56 @@ const getMethodById = async (req, res) => {
 
 const postMethod = async (req, res) => {
     try {
-        const { Nombre, Usuario, Correo, Contraseña, Id_Rol, Id_Puesto } = req.body;
+        const { nombre_completo, email, password, id_rol } = req.body;
 
-        let validation = tiposDatos.validateId(Id_Rol);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
+        let validation = tiposDatos.validateId(id_rol);
+        if (!validation.valid) return res.status(400).json({ error: validation.error });
 
-        validation = tiposDatos.validateId(Id_Puesto);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
+        validation = tiposDatos.validateEmail(email);
+        if (!validation.valid) return res.status(400).json({ error: validation.error });
 
-        validation = tiposDatos.validateText(Usuario);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
+        validation = tiposDatos.validateText(nombre_completo);
+        if (!validation.valid) return res.status(400).json({ error: validation.error });
 
-        validation = tiposDatos.validateText(Correo);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
-
-        validation = tiposDatos.validateText(Nombre);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
-
-        validation = tiposDatos.validateText(Contraseña);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
+        validation = tiposDatos.validateText(password);
+        if (!validation.valid) return res.status(400).json({ error: validation.error });
 
         const [resultado] = await createDatos(req.body);
-        res.status(201).json({ success: true, message: resultado.Resultado })
+        res.status(201).json({ success: true, message: resultado.Resultado });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
+
 const updateMethod = async (req, res) => {
     try {
-        const { Nombre, Usuario, Correo, Contraseña, Id_Rol, Id_Puesto, Id_Usuario } = req.body;
+        const { id_usuario, nombre_completo, email, password, id_rol } = req.body;
 
-        let validation = tiposDatos.validateId(Id_Rol);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
+        validation = tiposDatos.validateId(id_usuario);
+        if (!validation.valid) return res.status(400).json({ error: validation.error });
 
-        validation = tiposDatos.validateId(Id_Puesto);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
+        validation = tiposDatos.validateText(nombre_completo);
+        if (!validation.valid) return res.status(400).json({ error: validation.error });
 
-        validation = tiposDatos.validateId(Id_Usuario);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
+        validation = tiposDatos.validateEmail(email);
+        if (!validation.valid) return res.status(400).json({ error: validation.error });
 
-        validation = tiposDatos.validateText(Usuario);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
+        validation = tiposDatos.validateText(password);
+        if (!validation.valid) return res.status(400).json({ error: validation.error });
 
-        validation = tiposDatos.validateText(Correo);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
-
-        validation = tiposDatos.validateText(Nombre);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
-
-        validation = tiposDatos.validateText(Contraseña);
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
+        let validation = tiposDatos.validateId(id_rol);
+        if (!validation.valid) return res.status(400).json({ error: validation.error });
 
         const [resultado] = await updateDatos(req.body);
-        res.status(201).json({ success: true, message: resultado.Resultado })
+        res.status(201).json({ success: true, message: resultado.Resultado });
 
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-}
+};
+
 
 const deleteMethod = async (req, res) => {
     try {
@@ -111,9 +101,9 @@ const deleteMethod = async (req, res) => {
 const methodLogin = async (req, res) => {
     try {
 
-        const { usuario, contraseña } = req.body;
+        const { nombre_completo, password } = req.body;
 
-        let validation = tiposDatos.validateText(usuario);
+        let validation = tiposDatos.validateText(nombre_completo);
         if (!validation.valid) return res.status(200).json({ error: validation.error });
 
         validation = tiposDatos.validateText(contraseña);

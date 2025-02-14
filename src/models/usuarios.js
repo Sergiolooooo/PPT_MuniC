@@ -1,39 +1,39 @@
 const database = require('../database/mysql');
 
 const getDatos = async () => {
-    const [[rows]] = await database.query('CALL Sp_GetUsuarios();');
+    const [[rows]] = await database.query('CALL sp_getusuarios();');
     return rows;
 }
 
 const getDatosById = async (id) => {
-    const [[rows]] = await database.query('CALL Sp_GetByIdUsuarios(?);', [id]);
+    const [[rows]] = await database.query('CALL sp_getbyidusuarios(?);', [id]);
     return rows;
 };
 
 const createDatos = async (datos) => {
-    const { Nombre, Usuario, Correo, Contraseña, Id_Rol, Id_Puesto } = datos;
-    const [[rows]] = await database.query('CALL Sp_CreateUsuarios(?,?,?,?,?,?);',
-        [Nombre, Usuario, Correo, Contraseña, Id_Rol, Id_Puesto]);
+    const { nombre_completo, email, password, id_rol } = datos;
+    const [[rows]] = await database.query('CALL sp_CreateUsuarios(?,?,?,?);',
+        [nombre_completo, email, password, id_rol]);
 
     return rows;
 }
 
 const updateDatos = async (datos) => {
-    const { Nombre, Usuario, Correo, Contraseña, Id_Rol, Id_Puesto, Id_Usuario } = datos;
-    const [[rows]] = await database.query('CALL Sp_UpdateUsuarios(?,?,?,?,?,?,?)',
-        [Nombre, Usuario, Correo, Contraseña, Id_Rol, Id_Puesto, Id_Usuario]);
+    const { id_usuario, nombre_completo, email, password, id_rol } = datos;
+    const [[rows]] = await database.query('CALL sp_updateusuarios(?,?,?,?,?)',
+        [id_usuario, nombre_completo, email, password, id_rol]);
 
     return rows;
 }
 
-const deleteDatos = async (dato) => {
-    const [[rows]] = await database.query('CALL Sp_DeleteUsuarios(?);', [dato]);
+const deleteDatos = async (id_usuario) => {
+    const [[rows]] = await database.query('CALL sp_deleteusuarios(?);', [id_usuario]);
     return rows;
 }
 
 const datosLogin = async (datos) => {
-    const { usuario, contraseña } = datos;
-    const [[rows]] = await database.query('CALL Sp_ValidateLogin(?,?);', [usuario, contraseña]);
+    const { email, password } = datos;
+    const [[rows]] = await database.query('CALL sp_validatelogin(?,?);', [email, password]);
     return rows;
 }
 
