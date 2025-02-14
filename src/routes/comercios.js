@@ -11,7 +11,6 @@ const {
 
 const router = Router();
 
-
 //router.get('/',validateToken ,getMethod); ASI SE USA EL VALIDATE TOKEN
 
 router.get('/', getMethod);

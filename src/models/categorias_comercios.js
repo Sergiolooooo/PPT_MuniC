@@ -12,8 +12,8 @@ const getDatosById = async (id) => {
 
 const createDatos = async (datos) => {
     const { nombre_categoria } = datos;
-    const [[rows]] = await database.query('CALL Sp_CreateCategoriasComercios(?);', [nombre_categoria]);
-    return rows;
+    const [result] = await database.query('CALL Sp_CreateCategoriasComercios(?)', [nombre_categoria]);
+    return result;
 };
 
 const updateDatos = async (datos) => {
