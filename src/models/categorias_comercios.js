@@ -23,9 +23,18 @@ const updateDatos = async (datos) => {
 };
 
 const deleteDatos = async (id) => {
-    const [[rows]] = await database.query('CALL Sp_DeleteCategoriasComercios(?);', [id]);
-    return rows;
+    try {
+        // Llamar al procedimiento almacenado
+        await database.query('CALL Sp_DeleteCategoriasComercios(?);', [id]);
+        return { success: true, message: "Categoría eliminada correctamente." };
+    } catch (error) {
+        if (error.code === 'ER_ROW_IS_REFERENCED_2') {
+            throw new Error("No se puede eliminar la categoría porque tiene comercios asociados.");
+        }
+        throw error;
+    }
 };
+
 
 module.exports = {
     getDatos,

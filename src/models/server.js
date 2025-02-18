@@ -11,7 +11,7 @@ class Server {
     //Rutas
     this.pathUsuarios = "/api/usuarios";
     this.pathComercios = "/api/comercios";
-    this.categoria = "/api/categoriaComercio";
+    this.categoria = "/api/categoriascomercios";
     this.pathRol = "/api/rol";
 
     this.middleware();
