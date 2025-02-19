@@ -16,9 +16,11 @@ const createDatos = async (datos) => {
     return result;
 };
 
-const updateDatos = async (datos) => {
-    const { id_categoria, nombre_categoria } = datos;
-    const [[rows]] = await database.query('CALL Sp_UpdateCategoriasComercios(?, ?);', [id_categoria, nombre_categoria]);
+const updateDatos = async (id, datos) => {
+    const { nombre_categoria = null} = datos;
+    const [rows] = await database.query('CALL Sp_UpdateCategoriasComercios(?,?)', 
+        [id, nombre_categoria]
+    );
     return rows;
 };
 
