@@ -13,6 +13,7 @@ class Server {
     this.pathComercios = "/api/comercios";
     this.categoria = "/api/categoriascomercios";
     this.pathRol = "/api/rol";
+    this.pathProductos = "/api/productos";
 
     this.middleware();
     this.routes();
@@ -23,6 +24,7 @@ class Server {
     this.app.use(this.pathComercios, require("../routes/comercios"));
     this.app.use(this.categoria, require("../routes/categorias_comercios"));
     this.app.use(this.pathRol, require("../routes/rol"));
+    this.app.use(this.pathProductos, require("../routes/productos"));
   }
 
   middleware() {
