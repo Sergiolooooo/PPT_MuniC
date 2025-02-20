@@ -6,7 +6,8 @@ const {
     getMethod,
     getMethodById,
     updateMethod,
-    deleteMethod
+    deleteMethod,
+    getComerciosByCategoria
 } = require('../controller/comercios');
 
 const router = Router();
@@ -14,6 +15,7 @@ const router = Router();
 //router.get('/',validateToken ,getMethod); ASI SE USA EL VALIDATE TOKEN
 
 router.get('/', getMethod);
+router.get('/categoria', getComerciosByCategoria);
 router.get('/:id', getMethodById);
 router.post('/', postMethod);
 router.put('/:id', updateMethod);

@@ -1,4 +1,4 @@
-const { CreateDatos, GetDatos, getDatosById, updateDatos, deleteDatos } = require('../models/comercios');
+const { CreateDatos, GetDatos, getDatosById, updateDatos, deleteDatos, getDatosByCategoria  } = require('../models/comercios');
 const tiposDatos = require('../validaciones/tipoDatos');
 require("../../env/config");
 const jwt = require('jsonwebtoken');
@@ -38,7 +38,24 @@ const getMethodById = async (req, res) => {
     }
 };
 
+const getComerciosByCategoria = async (req, res) => {
+    try {
+        // Se espera que el parámetro 'categoria' se reciba en la query string
+        const { categoria } = req.query;
+        if (!categoria) {
+            return res.status(400).json({ success: false, message: 'Categoría no proporcionada.' });
+        }
+        const datos = await getDatosByCategoria(categoria);
 
+        if (datos.length > 0) {
+            res.json({ success: true, data: datos });
+        } else {
+            res.status(404).json({ success: false, message: 'No se encontraron comercios para esa categoría.' });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
 
 const postMethod = async (req, res) => {
     try {
@@ -108,5 +125,6 @@ module.exports = {
     getMethod,
     getMethodById,
     updateMethod,
-    deleteMethod
+    deleteMethod,
+    getComerciosByCategoria
 };
