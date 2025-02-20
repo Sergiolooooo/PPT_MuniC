@@ -6,12 +6,15 @@ const GetDatos = async () => {
 };
 
 
-
 const getDatosById = async (id_comercio) => {
     const [[rows]] = await database.query('CALL Sp_GetByIdComercios(?);', [id_comercio]);
     return rows;
 };
 
+const getDatosByCategoria = async (categoria) => {
+    const [[rows]] = await database.query('CALL Sp_GetComerciosByCategoria(?);', [categoria]);
+    return rows; // Retorna la lista de comercios filtrados
+};
 
 const CreateDatos = async (datos) => {
     const { nombre_comercio, descripcion_comercio, latitud, longitud, telefono, video_youtube, id_categoria } = datos;
@@ -41,5 +44,6 @@ module.exports = {
     GetDatos,
     getDatosById,
     updateDatos,
-    deleteDatos
+    deleteDatos,
+    getDatosByCategoria 
 };
