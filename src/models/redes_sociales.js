@@ -10,6 +10,12 @@ const getRedSocialById = async (id_red_social) => {
     return rows;
 };
 
+const getDatosByComercio = async (comercio) => {
+    const [rows] = await database.query('CALL Sp_GetRedesByComercio(?);', [comercio]);
+    return rows[0]; // Retorna la lista de redes sociales filtradas
+};
+
+
 const createRedSocial = async (datos) => {
     const { nombre_red_social, enlace, id_comercio } = datos;
     const [result] = await database.query(
@@ -37,5 +43,6 @@ module.exports = {
     getRedesSociales,
     getRedSocialById,
     updateRedSocial,
-    deleteRedSocial
+    deleteRedSocial,
+    getDatosByComercio
 };

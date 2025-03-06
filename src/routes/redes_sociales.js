@@ -6,7 +6,8 @@ const {
     getMethod,
     getMethodById,
     updateMethod,
-    deleteMethod
+    deleteMethod,
+    getRedesByComercio
 } = require('../controller/redes_sociales');
 
 const router = Router();
@@ -14,6 +15,7 @@ const router = Router();
 //router.get('/', validateToken, getMethod); // Descomenta esta línea si quieres proteger la ruta con token
 
 router.get('/', getMethod);
+router.get('/comercio', getRedesByComercio);
 router.get('/:id', getMethodById);
 router.post('/', postMethod);
 router.put('/:id', updateMethod);

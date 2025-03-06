@@ -3,7 +3,8 @@ const {
   getRedesSociales, 
   getRedSocialById, 
   updateRedSocial, 
-  deleteRedSocial 
+  deleteRedSocial,
+  getDatosByComercio
 } = require('../models/redes_sociales');
 
 const tipoDatos = require('../validaciones/tipoRedSocial');
@@ -40,6 +41,25 @@ const getMethodById = async (req, res) => {
       res.status(500).json({ error: error.message });
   }
 };
+
+const getRedesByComercio = async (req, res) => {
+    try {
+        const { comercio } = req.query; // Si lo quieres como query string 
+
+        if (!comercio) {
+            return res.status(400).json({ success: false, message: 'ID de comercio no proporcionado.' });
+        }
+        const datos = await getDatosByComercio(comercio);
+        if (datos.length > 0) {
+            res.json({ success: true, data: datos });
+        } else {
+            res.status(404).json({ success: false, message: 'No se encontraron redes sociales para este comercio.' });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
+
 
 const postMethod = async (req, res) => {
   try {
@@ -103,5 +123,6 @@ module.exports = {
   getMethod,
   getMethodById,
   updateMethod,
-  deleteMethod
+  deleteMethod,
+  getRedesByComercio
 };
