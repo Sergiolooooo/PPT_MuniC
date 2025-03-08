@@ -1,4 +1,3 @@
-const multer = require('multer');
 const {
     createAlbumImagen,
     getAlbumImagenes,
@@ -7,15 +6,11 @@ const {
     deleteAlbumImagen
 } = require('../models/album_imagenes');
 
-// Configurar la libreria multer para almacenar imágenes en memoria
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage }).array('files', 10);  // 'files' es el nombre del campo en el frontend, permite hasta 10 archivos
-
 // Subir imágenes (uno o varios archivos)
 const postMethod = async (req, res) => {
     try {
 
-        // Verificar si se subieron las imágenes
+        // Verificar si se subieron imágenes
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ success: false, message: 'No se enviaron imágenes.' });
         }
@@ -53,7 +48,8 @@ const postMethod = async (req, res) => {
 const getMethod = async (req, res) => {
     try {
         const imagenes = await getAlbumImagenes();
-
+        console.log(imagenes);
+        
         if (imagenes.length > 0) {
             res.json({ success: true, data: imagenes });
         } else {
@@ -144,6 +140,5 @@ module.exports = {
     getMethod,
     getMethodById,
     updateMethod,
-    deleteMethod,
-    upload // Se exporta la configuración de multer para su uso en las rutas
+    deleteMethod
 };

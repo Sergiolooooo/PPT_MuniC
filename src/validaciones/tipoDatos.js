@@ -30,7 +30,7 @@ class tipoDatos {
     }
 
     static validateAll(data) {
-        const { nombre_comercio, descripcion_comercio, url_google, telefono, video_youtube, id_categoria } = data;
+        const { nombre_comercio, descripcion_comercio, latitud, longitud, telefono, video_youtube, id_categoria } = data;
 
         let validationResult;
 
@@ -40,7 +40,10 @@ class tipoDatos {
         validationResult = this.validateText(descripcion_comercio);
         if (!validationResult.valid) return validationResult;
 
-        validationResult = this.validateText(url_google, "Url Google");
+        validationResult = this.validateFloat(latitud, "Latitud");
+        if (!validationResult.valid) return validationResult;
+
+        validationResult = this.validateFloat(longitud, "Longitud");
         if (!validationResult.valid) return validationResult;
 
         validationResult = this.validatePhone(telefono);
