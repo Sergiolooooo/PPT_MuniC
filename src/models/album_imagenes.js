@@ -2,7 +2,7 @@ const database = require('../database/mysql');
 
 const getAlbumImagenes = async () => {
     const [[rows]] = await database.query('CALL Sp_GetAlbumImagenes();');
-    return rows;
+    return rows; 
 };
 
 const getAlbumImagenById = async (id) => {

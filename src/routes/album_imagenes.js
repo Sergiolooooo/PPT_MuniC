@@ -6,16 +6,16 @@ const {
     getMethod,
     getMethodById,
     updateMethod,
-    deleteMethod,
-    upload
+    deleteMethod
 } = require('../controller/album_imagenes');
+const { validarArchivos } = require('../utils/multer');
 
 const router = Router();
 
 router.get('/', getMethod); 
 router.get('/:id', getMethodById);
-router.post('/', upload, postMethod); 
-router.put('/:id',upload, updateMethod); 
+router.post('/', validarArchivos, postMethod); 
+router.put('/:id',validarArchivos, updateMethod); 
 router.delete('/:id', deleteMethod); 
 
 module.exports = router;
