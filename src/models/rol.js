@@ -1,37 +1,38 @@
 const database = require('../database/mysql');
 
-const getDatos = async () => {
+const getRoles = async () => {
     const [[rows]] = await database.query('CALL Sp_GetRoles();');
     return rows;
 }
 
-const getDatosById = async (id) => {
-    const [[rows]] = await database.query('CALL Sp_GetRolById(?);', [id]);
+const getRolById = async (id) => {
+    const [[rows]] = await database.query('CALL Sp_GetByIdRol(?);', [id]);
     return rows;
 };
 
-const createDatos = async (datos) => {
+const createRol = async (datos) => {
     const { nombre_rol } = datos;
-    const [[result]] = await database.query('CALL Sp_CreateRol(?)', [nombre_rol]);
+    const [result] = await database.query('CALL Sp_CreateRol(?)', [nombre_rol]);
+
     return result;
 };
 
-const updateDatos = async (datos) => {
+const updateRol = async (datos) => {
     const { id_rol, nombre_rol } = datos;
-    const [[rows]] = await database.query('CALL Sp_UpdateRol(?,?);', [id_rol, nombre_rol]);
-
+    const [rows] = await database.query('CALL Sp_UpdateRol(?,?);', [id_rol, nombre_rol]);
+    console.log(rows);
     return rows;
 }
 
-const deleteDatos = async (id) => {
-    const [[rows]] = await database.query('CALL Sp_DeleteRol(?)', [id]);
+const deleteRol = async (id) => {
+    const [rows] = await database.query('CALL Sp_DeleteRol(?)', [id]);
     return rows;
 };
 
 module.exports = {
-    getDatos,
-    getDatosById,
-    createDatos,
-    updateDatos,
-    deleteDatos
+    getRoles,
+    getRolById,
+    createRol,
+    updateRol,
+    deleteRol
 };
