@@ -17,8 +17,8 @@ const createRol = async (datos) => {
     return result;
 };
 
-const updateRol = async (datos) => {
-    const { id_rol, nombre_rol } = datos;
+const updateRol = async (id_rol,datos) => {
+    const { nombre_rol } = datos;
     const [rows] = await database.query('CALL Sp_UpdateRol(?,?);', [id_rol, nombre_rol]);
     console.log(rows);
     return rows;
