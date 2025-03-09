@@ -31,12 +31,12 @@ router.post('/login', methodLogin);
 router.post('/get-user-cookie', validateToken, getUserToken);
 
 // Ruta para actualizar un usuario
-router.put('/', validateToken, updateMethod);
+router.put('/:id', validateToken, updateMethod);
 
 // Ruta para eliminar un usuario
 router.delete('/:id', validateToken, deleteMethod);
 
 // Ruta para restablecer la contraseña de un usuario (opcional)
-router.put('/reset-password', setNewPassword);
+router.post('/reset-password', setNewPassword);
 
 module.exports = router;

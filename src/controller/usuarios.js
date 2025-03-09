@@ -22,6 +22,8 @@ const getMethod = async (req, res) => {
 const getMethodById = async (req, res) => {
     try {
         const { id } = req.params;
+        let validation = tiposDatos.validateId(id,"id");
+        if (!validation.valid) return res.status(200).json({ error: validation.error });
         const datos = await getDatosById(id);
         if (datos.length !== 0) {
             res.json({ success: true, data: datos });
@@ -36,15 +38,12 @@ const getMethodById = async (req, res) => {
 const postMethod = async (req, res) => {
     try {
         const { password } = req.body;
-
         const validation = tiposDatos.validateAll(req.body);
         if (!validation.valid) {
             return res.status(400).json({ success: false, error: validation.error });
         }
-
         // Encriptar la password antes de guardarla
         const hashedPassword = await bcrypt.hash(password, 10);
-
         // Crear el email con la password encriptada
         const [resultado] = await createDatos({ ...req.body, password: hashedPassword });
         if (resultado && resultado.affectedRows > 0) {
@@ -61,30 +60,29 @@ const postMethod = async (req, res) => {
 
 const updateMethod = async (req, res) => {
     try {
-        const { id_usuario, nombre_completo, email, estado } = req.body;
+        const { id } = req.params;
+        const { nombre_completo, email, estado } = req.body;
 
         // Validaciones de datos de entrada
-        let validation = tiposDatos.validateId(id_usuario);
+        let validation = tiposDatos.validateId(id,"id");
         if (!validation.valid) return res.status(200).json({ error: validation.error });
 
-        validation = tiposDatos.validateText(nombre_completo);
+        validation = tiposDatos.validateText(nombre_completo,"nombre_completo");
         if (!validation.valid) return res.status(200).json({ error: validation.error });
 
-        validation = tiposDatos.validateText(email);
+        validation = tiposDatos.validateEmail(email);
         if (!validation.valid) return res.status(200).json({ error: validation.error });
 
-        validation = tiposDatos.validateText(estado);
+        validation = tiposDatos.validateEstado(estado,"estado");
         if (!validation.valid) return res.status(200).json({ error: validation.error });
-
 
         // Llamada al modelo para actualizar el email, pasando la nueva password encriptada si es necesario
-        const resultado = await updateDatos(req.body);
+        const resultado = await updateDatos(id,req.body);
         if (resultado && resultado.affectedRows > 0) {
             res.status(200).json({ success: true, message: 'Usuario actualizado exitosamente' });
         } else {
             res.status(400).json({ success: false, message: 'Error al actualizar' });
         }
-
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -93,8 +91,14 @@ const updateMethod = async (req, res) => {
 const deleteMethod = async (req, res) => {
     try {
         const { id } = req.params;
+        let validation = tiposDatos.validateId(id,"id");
+        if (!validation.valid) return res.status(200).json({ error: validation.error });
         const resultado = await deleteDatos(id);
-        res.status(201).json({ success: true, message: "Usuario eliminado exitosamente" });
+        if (resultado && resultado.affectedRows > 0) {
+            res.status(200).json({ success: true, message: 'Usuario eliminado exitosamente' });
+        } else {
+            res.status(400).json({ success: false, message: 'Error al actualizar' });
+        }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -105,10 +109,10 @@ const methodLogin = async (req, res) => {
         const { email, password } = req.body;
 
         // Validaciones de datos de entrada
-        let validation = tiposDatos.validateText(email);
+        let validation = tiposDatos.validateEmail(email);
         if (!validation.valid) return res.status(400).json({ error: validation.error });
 
-        validation = tiposDatos.validateText(password);
+        validation = tiposDatos.validatePassword(password);
         if (!validation.valid) return res.status(400).json({ error: validation.error });
 
         // Llamada al modelo para obtener datos de login
@@ -158,10 +162,10 @@ const setNewPassword = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        let validation = tiposDatos.validateText(email);
+        let validation = tiposDatos.validateEmail(email);
         if (!validation.valid) return res.status(400).json({ error: validation.error });
 
-        let validationpass = tiposDatos.validateText(password);
+        let validationpass = tiposDatos.validatePassword(password);
         if (!validationpass.valid) return res.status(400).json({ error: validationpass.error });
 
         // Encriptar la password antes de guardarla
