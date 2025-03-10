@@ -17,10 +17,10 @@ const createDatos = async (datos) => {
     return rows;
 };
 
-const updateDatos = async (datos) => {
-    const { id_usuario, nombre_completo, email, estado } = datos;
+const updateDatos = async (id,datos) => {
+    const { nombre_completo, email, estado } = datos;
     const [rows] = await database.query('CALL Sp_UpdateUsuarios(?,?,?,?)',
-        [id_usuario, nombre_completo, email, estado]);
+        [id, nombre_completo, email, estado]);
     return rows;
 };
 

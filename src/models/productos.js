@@ -10,6 +10,15 @@ const getProductoById = async (id_producto) => {
     return rows;
 };
 
+const getDatosByComercio = async (idComercio) => {
+    try {
+        const [rows] = await database.query('CALL Sp_GetProductosByComercio(?);', [idComercio]);
+        return rows[0]; // Devuelve la lista de productos
+    } catch (error) {
+        throw error;
+    }
+};
+
 const createProducto = async (datos) => {
     const { nombre_producto, descripcion_producto, precio, id_comercio } = datos;
     const [result] = await database.query(
@@ -38,5 +47,6 @@ module.exports = {
     getProductos,
     getProductoById,
     updateProducto,
-    deleteProducto
+    deleteProducto,
+    getDatosByComercio
 };

@@ -1,4 +1,4 @@
-const { createProducto,getProductos, getProductoById, updateProducto, deleteProducto } = require('../models/productos');
+const { createProducto,getProductos, getProductoById, updateProducto, deleteProducto, getDatosByComercio } = require('../models/productos');
 const tiposDatos = require('../validaciones/tipoProducto');
 
 const getMethod = async (req, res) => {
@@ -31,6 +31,26 @@ const getMethodById = async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+};
+
+const getProductosByComercio = async (req, res) => {
+    try {
+        const { comercio } = req.query; // Recibir id_comercio desde la URL (?comercio=13)
+
+        if (!comercio) {
+            return res.status(400).json({ success: false, message: 'ID de comercio no proporcionado.' });
+        }
+
+        const productos = await getDatosByComercio(comercio);
+
+        if (productos.length > 0) {
+            res.json({ success: true, data: productos });
+        } else {
+            res.status(404).json({ success: false, message: 'No se encontraron productos para este comercio.' });
+        }
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
     }
 };
 
@@ -96,5 +116,6 @@ module.exports = {
     getMethod,
     getMethodById,
     updateMethod,
-    deleteMethod
+    deleteMethod,
+    getProductosByComercio
 };

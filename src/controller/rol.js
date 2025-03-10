@@ -1,5 +1,5 @@
 const { getRoles, getRolById, createRol, deleteRol, updateRol } = require('../models/rol');
-const tiposDatos = require('../validaciones/tipoDatos');
+const tiposDatos = require('../validaciones/tipoRol');
 require("../../env/config");
 
 const getMethod = async (req, res) => {
@@ -19,6 +19,9 @@ const getMethod = async (req, res) => {
 const getMethodById = async (req, res) => {
     try {
         const { id } = req.params;
+        let validation = tiposDatos.validateId(id, "id");
+        if (!validation.valid) return res.status(200).json({ error: validation.error });
+
         const datos = await getRolById(id);
 
         if (datos.length !== 0) {
@@ -35,7 +38,7 @@ const postMethod = async (req, res) => {
     try {
         const { nombre_rol } = req.body;
 
-        let validation = tiposDatos.validateText(nombre_rol);
+        let validation = tiposDatos.validateText(nombre_rol, "nombre_rol");
         if (!validation.valid) return res.status(200).json({ error: validation.error });
 
         const resultado = await createRol(req.body);
@@ -55,15 +58,19 @@ const postMethod = async (req, res) => {
 
 const updateMethod = async (req, res) => {
     try {
-        const { id_rol, nombre_rol } = req.body;
+        const { id } = req.params;
+        const { nombre_rol, estado } = req.body;
 
-        let validation = tiposDatos.validateId(id_rol);
+        let validation = tiposDatos.validateId(id, "id");
         if (!validation.valid) return res.status(200).json({ error: validation.error });
 
-        validation = tiposDatos.validateText(nombre_rol);
+        validation = tiposDatos.validateText(nombre_rol, "nombre_rol");
         if (!validation.valid) return res.status(200).json({ error: validation.error });
 
-        const resultado = await updateRol(req.body);
+        validation = tiposDatos.validateEstado(estado, "estado");
+        if (!validation.valid) return res.status(200).json({ error: validation.error });
+
+        const resultado = await updateRol(id, req.body);
         if (resultado && resultado.affectedRows > 0) {
             res.status(200).json({ success: true, message: 'Rol actualizado exitosamente' });
         } else {
@@ -76,29 +83,21 @@ const updateMethod = async (req, res) => {
     }
 };
 
-
-
-
-
-
-
 const deleteMethod = async (req, res) => {
     try {
         const { id } = req.params;
-
-        if (!id || isNaN(id)) {
-            return res.status(400).json({ error: "ID inválido o no proporcionado" });
+        let validation = tiposDatos.validateId(id, "id");
+        if (!validation.valid) return res.status(200).json({ error: validation.error });
+        
+        const resultado = await deleteRol(id);
+        if (resultado && resultado.affectedRows > 0) {
+            res.status(200).json({ success: true, message: 'Rol eliminado exitosamente' });
+        } else {
+            res.status(400).json({ success: false, message: 'Error al eliminar el Rol' });
         }
-
-        // Llamar al modelo deleteRol
-        const [resultado] = await deleteRol(id);
-        // Si el resultado tiene filas, significa que la operación fue exitosa
-        res.status(200).json({ success: true, message: "Rol eliminado correctamente" });
-
     } catch (error) {
         // Si ocurre un error, manejarlo aquí
         if (error.code === 'ER_SIGNAL_EXCEPTION') {
-            // Si es un error de SIGNAL lanzado desde MySQL, mostrar el mensaje de error
             res.status(400).json({ error: error.message });
         } else {
             // Otro tipo de error
