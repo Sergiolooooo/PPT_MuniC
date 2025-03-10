@@ -15,7 +15,7 @@ const router = Router();
 router.get('/', getMethod);
 router.get('/:id', getMethodById);
 router.post('/', postMethod);
-router.put('/', updateMethod);
+router.put('/:id', updateMethod);
 router.delete('/:id', deleteMethod);
 
 module.exports = router;
