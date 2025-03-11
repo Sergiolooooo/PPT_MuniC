@@ -27,12 +27,17 @@ const CreateDatos = async (datos) => {
 };
     
 const updateDatos = async (id, datos) => {
-    const { nombre_comercio = null, descripcion_comercio = null, latitud = null, longitud = null, telefono = null, video_youtube = null, id_categoria = null } = datos;
-    const [rows] = await database.query('CALL Sp_UpdateComercio(?,?,?,?,?,?,?,?)', 
-        [id, nombre_comercio, descripcion_comercio, latitud, longitud, telefono, video_youtube, id_categoria]
-    );
+    const { nombre_comercio = null, descripcion_comercio = null, url_google = null, telefono = null,
+        video_youtube = null, id_categoria = null
+    } = datos;
+
+    const query = 'CALL Sp_UpdateComercio(?, ?, ?, ?, ?, ?, ?)';
+    const values = [id, nombre_comercio, descripcion_comercio, url_google, telefono, video_youtube, id_categoria];
+
+    const [rows] = await database.query(query, values);
     return rows;
 };
+
 
 const deleteDatos = async (id) => {
     const [rows] = await database.query('CALL Sp_DeleteComercio(?)', [id]);
