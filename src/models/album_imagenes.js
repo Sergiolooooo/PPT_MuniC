@@ -11,13 +11,17 @@ const getAlbumImagenById = async (id) => {
 };
 
 const createAlbumImagen = async (datos) => {
-    const { nombre_imagen, tipo_imagen, datos_imagen, id_comercio } = datos; // Agregado id_comercio
-    console.log(nombre_imagen);
-    
+    const { nombre_imagen, tipo_imagen, datos_imagen, id_comercio } = datos;
+
+    if (!nombre_imagen || !tipo_imagen || !datos_imagen || !id_comercio) {
+        throw new Error("Todos los campos son obligatorios.");
+    }
+
     const [result] = await database.query(
-        'CALL Sp_CreateAlbumImagen(?,?,?,?)', // Modificar llamada al procedimiento almacenado
-        [nombre_imagen, tipo_imagen, datos_imagen, id_comercio] // Añadido id_comercio
+        'CALL Sp_CreateAlbumImagen(?,?,?,?)',
+        [nombre_imagen, tipo_imagen, datos_imagen, id_comercio]
     );
+
     return result;
 };
 

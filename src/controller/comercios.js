@@ -85,19 +85,23 @@ const updateMethod = async (req, res) => {
         const { id } = req.params;
         const datosActualizados = req.body;
 
+        if (!id || isNaN(id)) {
+            return res.status(400).json({ success: false, message: "ID inválido" });
+        }
+
         // Llamada al procedimiento almacenado
         const resultado = await updateDatos(id, datosActualizados);
 
         if (resultado && resultado.affectedRows > 0) {
-            res.status(200).json({ success: true, message: 'Comercio actualizado exitosamente' });
+            res.status(200).json({ success: true, message: "Comercio actualizado exitosamente" });
         } else {
-            res.status(400).json({ success: false, message: 'Error al actualizar el comercio o comercio no encontrado' });
+            res.status(400).json({ success: false, message: "Error al actualizar el comercio o comercio no encontrado" });
         }
-
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 const deleteMethod = async (req, res) => {
     try {

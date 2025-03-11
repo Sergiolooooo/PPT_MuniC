@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { validateToken } = require('../validaciones/validateToken'); 
+const { validarArchivos } = require('../utils/multer');
 
 const {
     postMethod,
@@ -8,7 +9,6 @@ const {
     updateMethod,
     deleteMethod
 } = require('../controller/album_imagenes');
-const { validarArchivos } = require('../utils/multer');
 
 const router = Router();
 

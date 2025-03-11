@@ -9,21 +9,17 @@ const {
 // Subir imágenes (uno o varios archivos)
 const postMethod = async (req, res) => {
     try {
-
-        // Verificar si se subieron imágenes
-        if (!req.files || req.files.length === 0) {
-            return res.status(400).json({ success: false, message: 'No se enviaron imágenes.' });
-        }
-
-        // Verificar si el id_comercio fue proporcionado
         const { id_comercio } = req.body;
         if (!id_comercio) {
             return res.status(400).json({ success: false, message: 'El id_comercio es obligatorio.' });
         }
 
-        // Iterar sobre los archivos y registrar cada imagen
+        let imagenesGuardadas = 0;
+        let errores = [];
+
         for (let i = 0; i < req.files.length; i++) {
             const file = req.files[i];
+
             const imagen = {
                 nombre_imagen: file.originalname,
                 tipo_imagen: file.mimetype,
@@ -31,14 +27,23 @@ const postMethod = async (req, res) => {
                 id_comercio: id_comercio
             };
 
-            // Llamar al procedimiento para cada imagen
-            const result = await createAlbumImagen(imagen);
-            if (!result || result.affectedRows === 0) {
-                return res.status(400).json({ success: false, message: `Error al agregar la imagen ${file.originalname}.` });
+            try {
+                await createAlbumImagen(imagen);
+                imagenesGuardadas++;
+            } catch (error) {
+                errores.push(`Error al agregar ${file.originalname}: ${error.message}`);
             }
         }
 
-        res.status(201).json({ success: true, message: 'Imágenes agregadas exitosamente.' });
+        if (imagenesGuardadas === 0) {
+            return res.status(400).json({ success: false, message: 'No se pudo guardar ninguna imagen.', errores });
+        }
+
+        res.status(201).json({
+            success: true,
+            message: `Se guardaron ${imagenesGuardadas} imágenes.`,
+            errores: errores.length > 0 ? errores : null
+        });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
