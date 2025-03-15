@@ -10,6 +10,11 @@ const getAlbumImagenById = async (id) => {
     return rows;
 };
 
+const getAlbumImagenCommerceById = async (id) => {
+    const [[rows]] = await database.query('CALL Sp_GetCommerceByIdAlbumImagen(?);', [id]);
+    return rows;
+};
+
 const createAlbumImagen = async (datos) => {
     const { nombre_imagen, tipo_imagen, datos_imagen, id_comercio } = datos;
 
@@ -42,6 +47,7 @@ module.exports = {
     createAlbumImagen,
     getAlbumImagenes,
     getAlbumImagenById,
+    getAlbumImagenCommerceById,
     updateAlbumImagen,
     deleteAlbumImagen
 };

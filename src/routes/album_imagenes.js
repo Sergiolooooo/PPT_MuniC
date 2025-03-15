@@ -7,12 +7,14 @@ const {
     getMethod,
     getMethodById,
     updateMethod,
-    deleteMethod
+    deleteMethod,
+    getMethodCommerceById
 } = require('../controller/album_imagenes');
 
 const router = Router();
 
 router.get('/', getMethod); 
+router.get('/comercio/:id', getMethodCommerceById);
 router.get('/:id', getMethodById);
 router.post('/', validarArchivos, postMethod); 
 router.put('/:id',validarArchivos, updateMethod); 
