@@ -18,7 +18,7 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 2 * 1024 * 1024 }, // 2MB por archivo
   fileFilter: fileFilter 
-}).array('files', 8); // Permitir hasta 10 archivos a la vez
+}).array('files', 8); // Hasta 8 imágenes
 
 const validarArchivos = (req, res, next) => {
   upload(req, res, (err) => {
@@ -29,10 +29,16 @@ const validarArchivos = (req, res, next) => {
       return res.status(400).json({ success: false, message: err.message });
     }
 
-    if (!req.files || req.files.length === 0) {
-      return res.status(400).json({ success: false, message: 'No se enviaron imágenes.' });
+    const metodo = req.method;
+
+    // Solo en POST, la imagen es obligatoria
+    if (metodo === "POST") {
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ success: false, message: 'Debes enviar al menos una imagen.' });
+      }
     }
 
+    // En PUT la imagen es opcional
     return next();
   });
 };
