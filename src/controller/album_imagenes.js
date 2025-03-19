@@ -125,7 +125,7 @@ const updateMethod = async (req, res) => {
             id_comercio: id_comercio
         };
 
-        // Si el usuario envía una nueva imagen, la procesamos
+        // Adjuntar imagen SOLO si el usuario subió una
         if (req.files && req.files.length > 0) {
             const file = req.files[0];
             imagen.nombre_imagen = file.originalname;
@@ -136,14 +136,16 @@ const updateMethod = async (req, res) => {
         const resultado = await updateAlbumImagen(id, imagen);
 
         if (resultado && resultado.affectedRows > 0) {
-            res.status(200).json({ success: true, message: 'Imagen actualizada exitosamente.' });
+            res.status(200).json({ success: true, message: 'Imagen o comercio actualizado exitosamente.' });
         } else {
-            res.status(400).json({ success: false, message: 'Error al actualizar la imagen o imagen no encontrada.' });
+            res.status(400).json({ success: false, message: 'Error al actualizar o imagen no encontrada.' });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
+
 
 
 // Eliminar una imagen por ID
