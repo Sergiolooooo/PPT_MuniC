@@ -3,16 +3,20 @@ const {
     getAlbumImagenes,
     getAlbumImagenById,
     updateAlbumImagen,
-    deleteAlbumImagen
+    deleteAlbumImagen,
+    getAlbumImagenCommerceById
 } = require('../models/album_imagenes');
+const tiposDatos = require('../validaciones/tipoAlbumImagenes');
 
 // Subir imágenes (uno o varios archivos)
 const postMethod = async (req, res) => {
     try {
         const { id_comercio } = req.body;
-        if (!id_comercio) {
-            return res.status(400).json({ success: false, message: 'El id_comercio es obligatorio.' });
-        }
+        let validation = tiposDatos.validateId(id_comercio, "id_comercio");
+        if (!validation.valid) return res.status(200).json({ error: validation.error });
+
+        let validationImages = tiposDatos.validateOneOMoreImages(req.files, "files");
+        if (!validationImages.valid) return res.status(200).json({ error: validationImages.error });
 
         let imagenesGuardadas = 0;
         let errores = [];
@@ -54,7 +58,7 @@ const getMethod = async (req, res) => {
     try {
         const imagenes = await getAlbumImagenes();
         console.log(imagenes);
-        
+
         if (imagenes.length > 0) {
             res.json({ success: true, data: imagenes });
         } else {
@@ -69,10 +73,8 @@ const getMethod = async (req, res) => {
 const getMethodById = async (req, res) => {
     try {
         const { id } = req.params;
-        if (!id) {
-            return res.status(400).json({ success: false, message: 'ID de imagen no proporcionado.' });
-        }
-
+        let validation = tiposDatos.validateId(id, "id");
+        if (!validation.valid) return res.status(200).json({ error: validation.error });
         const imagen = await getAlbumImagenById(id);
 
         if (imagen.length !== 0) {
@@ -85,49 +87,73 @@ const getMethodById = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-
-// Actualizar una imagen
-const updateMethod = async (req, res) => {
+// Obtener una imagen por id de un comercio
+const getMethodCommerceById = async (req, res) => {
     try {
         const { id } = req.params;
+        let validation = tiposDatos.validateId(id, "id");
+        if (!validation.valid) return res.status(200).json({ error: validation.error });
+        const imagen = await getAlbumImagenCommerceById(id);
 
-        // Verificar si se subieron imágenes
-        if (!req.files || req.files.length === 0) {
-            return res.status(400).json({ success: false, message: 'No se enviaron imágenes.' });
-        }
-
-        // Verificar si se proporciona el id_comercio
-        const { id_comercio } = req.body;
-        if (!id_comercio) {
-            return res.status(400).json({ success: false, message: 'El id_comercio es obligatorio.' });
-        }
-        const file = req.files[0];
-        const imagen = {
-            nombre_imagen: file.originalname,
-            tipo_imagen: file.mimetype,
-            datos_imagen: file.buffer,
-            id_comercio: id_comercio
-        };
-
-        const resultado = await updateAlbumImagen(id, imagen);
-
-        if (resultado && resultado.affectedRows > 0) {
-            res.status(200).json({ success: true, message: 'Imagen actualizada exitosamente.' });
+        if (imagen.length !== 0) {
+            res.set('Content-Type', imagen[0].tipo_imagen);
+            res.json({ success: true, data: imagen });
         } else {
-            res.status(400).json({ success: false, message: 'Error al actualizar la imagen o imagen no encontrada.' });
+            res.json({ success: false, message: 'Imagenes del comercio no encontradas.' });
         }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
+// Actualizar una imagen
+const updateMethod = async (req, res) => {
+    try {
+        const { id } = req.params;
+        let validation = tiposDatos.validateId(id, "id");
+        if (!validation.valid) return res.status(200).json({ error: validation.error });
+
+        const { id_comercio } = req.body;
+        let validationCommerce = tiposDatos.validateId(id_comercio, "id_comercio");
+        if (!validationCommerce.valid) return res.status(200).json({ error: validationCommerce.error });
+
+        // Inicializar imagen vacía
+        let imagen = {
+            nombre_imagen: null,
+            tipo_imagen: null,
+            datos_imagen: null,
+            id_comercio: id_comercio
+        };
+
+        // Adjuntar imagen SOLO si el usuario subió una
+        if (req.files && req.files.length > 0) {
+            const file = req.files[0];
+            imagen.nombre_imagen = file.originalname;
+            imagen.tipo_imagen = file.mimetype;
+            imagen.datos_imagen = file.buffer;
+        }
+
+        const resultado = await updateAlbumImagen(id, imagen);
+
+        if (resultado && resultado.affectedRows > 0) {
+            res.status(200).json({ success: true, message: 'Imagen o comercio actualizado exitosamente.' });
+        } else {
+            res.status(400).json({ success: false, message: 'Error al actualizar o imagen no encontrada.' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+
+
+
 // Eliminar una imagen por ID
 const deleteMethod = async (req, res) => {
     try {
         const { id } = req.params;
-
-        if (!id || isNaN(id)) return res.status(400).json({ error: "ID inválido o no proporcionado" });
-
+        let validation = tiposDatos.validateId(id, "id");
+        if (!validation.valid) return res.status(200).json({ error: validation.error });
         const resultado = await deleteAlbumImagen(id);
 
         if (resultado && resultado.affectedRows > 0) {
@@ -143,6 +169,7 @@ const deleteMethod = async (req, res) => {
 module.exports = {
     postMethod,
     getMethod,
+    getMethodCommerceById,
     getMethodById,
     updateMethod,
     deleteMethod
