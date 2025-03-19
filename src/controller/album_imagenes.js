@@ -112,24 +112,26 @@ const updateMethod = async (req, res) => {
         const { id } = req.params;
         let validation = tiposDatos.validateId(id, "id");
         if (!validation.valid) return res.status(200).json({ error: validation.error });
-        // Verificar si se subieron imágenes
-        if (!req.files || req.files.length === 0) {
-            return res.status(400).json({ success: false, message: 'No se enviaron imágenes.' });
-        }
-        // Verificar si se proporciona el id_comercio
+
         const { id_comercio } = req.body;
         let validationCommerce = tiposDatos.validateId(id_comercio, "id_comercio");
         if (!validationCommerce.valid) return res.status(200).json({ error: validationCommerce.error });
-        // Verificar si se proporciona una imagen para actualizar
-        let validationOneImage = tiposDatos.validateOneImagen(req.files, "files");
-        if (!validationOneImage.valid) return res.status(200).json({ error: validationOneImage.error });
-        const file = req.files[0];
-        const imagen = {
-            nombre_imagen: file.originalname,
-            tipo_imagen: file.mimetype,
-            datos_imagen: file.buffer,
+
+        // Inicializar imagen vacía
+        let imagen = {
+            nombre_imagen: null,
+            tipo_imagen: null,
+            datos_imagen: null,
             id_comercio: id_comercio
         };
+
+        // Si el usuario envía una nueva imagen, la procesamos
+        if (req.files && req.files.length > 0) {
+            const file = req.files[0];
+            imagen.nombre_imagen = file.originalname;
+            imagen.tipo_imagen = file.mimetype;
+            imagen.datos_imagen = file.buffer;
+        }
 
         const resultado = await updateAlbumImagen(id, imagen);
 
@@ -142,6 +144,7 @@ const updateMethod = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 // Eliminar una imagen por ID
 const deleteMethod = async (req, res) => {
