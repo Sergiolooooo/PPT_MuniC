@@ -16,6 +16,7 @@ class Server {
     this.pathProductos = "/api/productos";
     this.pathRedesSociales = "/api/redesSociales";
     this.pathAlbumComercio = "/api/albumComercio";
+    this.pathNoticias = "/api/noticias";
 
     this.middleware();
     this.routes();
@@ -29,12 +30,17 @@ class Server {
     this.app.use(this.pathProductos, require("../routes/productos"));
     this.app.use(this.pathRedesSociales, require("../routes/redes_sociales"));
     this.app.use(this.pathAlbumComercio, require("../routes/album_imagenes"));
+    this.app.use(this.pathNoticias, require("../routes/noticias"));
 
   }
 
   middleware() {
     this.app.use(express.static("public"));
-    this.app.use(cors());
+    this.app.use(cors({
+      origin: ['http://127.0.0.1:5500','null'],
+      methods: ['GET', 'POST', 'PUT', 'DELETE'],
+      credentials: true
+    }));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
   }
