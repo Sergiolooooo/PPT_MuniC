@@ -10,9 +10,9 @@ const getProductoById = async (id_producto) => {
     return rows;
 };
 
-const getDatosByComercio = async (idComercio) => {
+const getDatosByComercio = async (id) => {
     try {
-        const [rows] = await database.query('CALL Sp_GetProductosByComercio(?);', [idComercio]);
+        const [rows] = await database.query('CALL Sp_GetProductosByComercio(?);', [id]);
         return rows[0]; // Devuelve la lista de productos
     } catch (error) {
         throw error;
