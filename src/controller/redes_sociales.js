@@ -44,12 +44,14 @@ const getMethodById = async (req, res) => {
 
 const getRedesByComercio = async (req, res) => {
     try {
-        const { comercio } = req.query; // Si lo quieres como query string 
+        const { id } = req.params; // Ahora lo tomamos de params
 
-        if (!comercio) {
+        if (!id) {
             return res.status(400).json({ success: false, message: 'ID de comercio no proporcionado.' });
         }
-        const datos = await getDatosByComercio(comercio);
+
+        const datos = await getDatosByComercio(id);
+
         if (datos.length > 0) {
             res.json({ success: true, data: datos });
         } else {

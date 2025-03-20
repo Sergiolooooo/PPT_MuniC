@@ -10,9 +10,9 @@ const getRedSocialById = async (id_red_social) => {
     return rows;
 };
 
-const getDatosByComercio = async (comercio) => {
-    const [rows] = await database.query('CALL Sp_GetRedesByComercio(?);', [comercio]);
-    return rows[0]; // Retorna la lista de redes sociales filtradas
+const getDatosByComercio = async (id) => {
+    const [rows] = await database.query('CALL Sp_GetRedesByComercio(?);', [id]);
+    return rows[0]; // Retorna la lista de redes sociales filtradas por id de comercio
 };
 
 
