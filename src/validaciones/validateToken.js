@@ -5,8 +5,6 @@ const validateToken = async (req, res, next) => {
     try {
         // Obtiene el token de las cookies
         const token = req.cookies.jwt
-
-
         if (!token) {
             return res.status(401).json({ msg: 'No se encontró un token válido en las cookies' });
         }

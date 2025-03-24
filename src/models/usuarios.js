@@ -11,16 +11,16 @@ const getDatosById = async (id_usuario) => {
 };
 
 const createDatos = async (datos) => {
-    const { nombre_completo, email, password, estado } = datos;
-    const rows = await database.query('CALL Sp_CreateUsuario(?,?,?,?)',
-        [nombre_completo, email, password, estado]);
+    const { nombre_completo, email, password, estado, id_rol } = datos;
+    const rows = await database.query('CALL Sp_CreateUsuario(?,?,?,?,?)',
+        [nombre_completo, email, password, estado, id_rol]);
     return rows;
 };
 
 const updateDatos = async (id,datos) => {
-    const { nombre_completo, email, estado } = datos;
-    const [rows] = await database.query('CALL Sp_UpdateUsuarios(?,?,?,?)',
-        [id, nombre_completo, email, estado]);
+    const { nombre_completo, email, estado, id_rol } = datos;
+    const [rows] = await database.query('CALL Sp_UpdateUsuarios(?,?,?,?,?)',
+        [id, nombre_completo, email, estado,id_rol]);
     return rows;
 };
 

@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { validateToken } = require('../validaciones/validateToken');
 const {validarRol} = require('../utils/validarRol');
+const {validarPermisos} = require('../utils/validarPermisos');
 
 const {
     getMethod,
@@ -16,13 +17,14 @@ const {
 const router = Router();
 
 // Ruta para obtener todos los usuarios
-router.get('/', validateToken, validarRol('super usuario','admin'), getMethod);
+//router.get('/', validateToken, validarRol('super usuario','admin'), getMethod);
+router.get('/', validateToken,  validarPermisos('OBTENER_TODOS_LOS_USUARIOS'), getMethod);
 
 // Ruta para obtener un usuario por ID
-router.get('/:id', validateToken, getMethodById);
+router.get('/:id', validateToken, validarPermisos('OBTENER_USUARIO_POR_ID'), getMethodById);
 
 // Ruta para registrar un nuevo usuario
-router.post('/', postMethod);
+router.post('/',  validateToken, postMethod);
 
 // Ruta para el login de un usuario
 router.post('/login', methodLogin);

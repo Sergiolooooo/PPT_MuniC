@@ -39,7 +39,7 @@ class tipoDatos {
     }
 
     static validateAll(data) {
-        const { nombre_completo, email, password,estado } = data;
+        const { nombre_completo, email, password,estado, id_rol } = data;
 
         let validationResult;
 
@@ -49,10 +49,13 @@ class tipoDatos {
         validationResult = this.validateEstado(estado,"estado");
         if (!validationResult.valid) return validationResult;
 
-        validationResult = this.validateEmail(email);
+        validationResult = this.validateEmail(email,"email");
         if (!validationResult.valid) return validationResult;
 
-        validationResult = this.validatePassword(password);
+        validationResult = this.validatePassword(password,"password");
+        if (!validationResult.valid) return validationResult;
+      
+        validationResult = this.validateId(id_rol,"id_rol");
         if (!validationResult.valid) return validationResult;
 
         return { valid: true };
