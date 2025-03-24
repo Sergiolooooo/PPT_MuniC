@@ -61,7 +61,7 @@ const postMethod = async (req, res) => {
 const updateMethod = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre_completo, email, estado } = req.body;
+        const { nombre_completo, email, estado, id_rol } = req.body;
 
         // Validaciones de datos de entrada
         let validation = tiposDatos.validateId(id,"id");
@@ -74,6 +74,9 @@ const updateMethod = async (req, res) => {
         if (!validation.valid) return res.status(200).json({ error: validation.error });
 
         validation = tiposDatos.validateEstado(estado,"estado");
+        if (!validation.valid) return res.status(200).json({ error: validation.error });
+
+        validation = tiposDatos.validateId(id_rol,"id_rol");
         if (!validation.valid) return res.status(200).json({ error: validation.error });
 
         // Llamada al modelo para actualizar el email, pasando la nueva password encriptada si es necesario
