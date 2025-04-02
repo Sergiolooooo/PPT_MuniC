@@ -146,8 +146,7 @@ const methodLogin = async (req, res) => {
             secure: true,
             maxAge: 3600000, // 1 hora
             sameSite: 'None',
-            path: '/',
-            domain: 'localhost'
+            path: '/'
         });
 
         res.json({ message: 'Inicio Exitoso.', user: usuarioConRoles });
