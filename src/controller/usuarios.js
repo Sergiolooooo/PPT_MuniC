@@ -147,7 +147,7 @@ const methodLogin = async (req, res) => {
             maxAge: 3600000, // 1 hora
             sameSite: 'None',
             path: '/',
-            domain: '.railway.app'
+            domain: 'ppt-munic.onrender.com'
         });
 
         res.json({ message: 'Inicio Exitoso.', user: usuarioConRoles });
