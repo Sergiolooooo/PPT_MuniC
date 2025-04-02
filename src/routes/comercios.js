@@ -17,8 +17,8 @@ const router = Router();
 router.get('/', getMethod);
 router.get('/categoria', getComerciosByCategoria);
 router.get('/:id', getMethodById);
-router.post('/',validateToken, postMethod);
-router.put('/:id',validateToken, updateMethod);
-router.delete('/:id',validateToken, deleteMethod);
+router.post('/', postMethod);
+router.put('/:id', updateMethod);
+router.delete('/:id', deleteMethod);
 
 module.exports = router;
