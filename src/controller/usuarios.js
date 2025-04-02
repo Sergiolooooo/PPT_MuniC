@@ -147,7 +147,7 @@ const methodLogin = async (req, res) => {
             maxAge: 3600000, // 1 hora
             sameSite: 'None',
             path: '/',
-            domain: 'practicafrontppt-production.up.railway.app'
+            domain: '.practicafrontppt-production.up.railway.app'
         });
 
         res.json({ message: 'Inicio Exitoso.', user: usuarioConRoles });
