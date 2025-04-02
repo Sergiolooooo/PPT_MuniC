@@ -143,7 +143,7 @@ const methodLogin = async (req, res) => {
         // Configurar la cookie con el token
         res.cookie("jwt", token, {
             httpOnly: true,
-            secure: false,
+            secure: true,
             maxAge: 3600000, // 1 hora
             sameSite: 'None',
             path: '/',
