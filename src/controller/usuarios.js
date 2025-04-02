@@ -146,7 +146,8 @@ const methodLogin = async (req, res) => {
             secure: true,
             maxAge: 3600000, // 1 hora
             sameSite: 'None',
-            path: '/'
+            path: '/',
+            domain: 'ppt-munic.onrender.com'
         });
 
         res.json({ message: 'Inicio Exitoso.', user: usuarioConRoles });
