@@ -14,9 +14,9 @@ const router = Router();
 
 //router.get('/',validateToken ,getMethod); ASI SE USA EL VALIDATE TOKEN
 
-router.get('/',validateToken, getMethod);
-router.get('/categoria',validateToken, getComerciosByCategoria);
-router.get('/:id',validateToken, getMethodById);
+router.get('/', getMethod);
+router.get('/categoria', getComerciosByCategoria);
+router.get('/:id', getMethodById);
 router.post('/',validateToken, postMethod);
 router.put('/:id',validateToken, updateMethod);
 router.delete('/:id',validateToken, deleteMethod);
