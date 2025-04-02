@@ -147,7 +147,7 @@ const methodLogin = async (req, res) => {
             maxAge: 3600000, // 1 hora
             sameSite: 'None',
             path: '/',
-            domain: '.up.railway.app'
+            domain: '.railway.app'
         });
 
         res.json({ message: 'Inicio Exitoso.', user: usuarioConRoles });
