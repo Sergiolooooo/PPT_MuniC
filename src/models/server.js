@@ -37,7 +37,7 @@ class Server {
   middleware() {
     this.app.use(express.static("public"));
     this.app.use(cors({
-      origin: ['http://127.0.0.1:5500','null'],
+      origin: ['https://practicafrontppt-production.up.railway.app','http://127.0.0.1:5500','null'],
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       credentials: true
     }));
