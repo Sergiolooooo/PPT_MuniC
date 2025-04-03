@@ -3,7 +3,7 @@ const { getDatos, getDatosById, createDatos, updateDatos, deleteDatos, datosLogi
 const tiposDatos = require('../validaciones/tipoUsuario');
 require("../../env/config");
 const jwt = require('jsonwebtoken');
-const { getRolUsuarioByIdUser } = require('../models/roles_usuarios');
+const { getPermisosByIdRol } = require('../models/rol');
 
 
 const getMethod = async (req, res) => {
@@ -130,11 +130,11 @@ const methodLogin = async (req, res) => {
             return res.status(401).json({ message: 'Contraseña incorrecta.' });
         }
         // Obtener los roles del usuario (asegurarse de que sea un array vacío si no tiene roles)
-        const roles = await getRolUsuarioByIdUser(usuarios[0].id_usuario) || [];
-
+        const permisosUsuario = await getPermisosByIdRol(usuarios[0].id_rol) || [];
+        const permisos =  permisosUsuario.map(row => row.numero)
         // Crear objeto del usuario sin la contraseña
         const { password: _, ...usuarioSinPassword } = usuarios[0];
-        const usuarioConRoles = { ...usuarioSinPassword, roles };
+        const usuarioConRoles = { ...usuarioSinPassword, permisos };
 
         // Generar token JWT
         const token = jwt.sign(
