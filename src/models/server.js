@@ -1,4 +1,5 @@
 const express = require("express");
+const cookieParser = require('cookie-parser');
 const cors = require("cors");
 const database = require("../database/mysql");
 require("../../env/config");
@@ -17,6 +18,7 @@ class Server {
     this.pathRedesSociales = "/api/redesSociales";
     this.pathAlbumComercio = "/api/albumComercio";
     this.pathNoticias = "/api/noticias";
+    this.pathRolPermiso = "/api/rol_permisos";
 
     this.middleware();
     this.routes();
@@ -31,18 +33,19 @@ class Server {
     this.app.use(this.pathRedesSociales, require("../routes/redes_sociales"));
     this.app.use(this.pathAlbumComercio, require("../routes/album_imagenes"));
     this.app.use(this.pathNoticias, require("../routes/noticias"));
-
+    this.app.use(this.pathRolPermiso, require("../routes/rol_permiso"));
   }
 
   middleware() {
     this.app.use(express.static("public"));
     this.app.use(cors({
-      origin: ['http://127.0.0.1:5500','null'],
+      origin: ['https://practicafrontppt-production.up.railway.app','http://127.0.0.1:5500','null'],
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       credentials: true
     }));
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(cookieParser());
   }
 
   listen() {
