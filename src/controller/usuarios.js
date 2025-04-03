@@ -195,6 +195,31 @@ const getUserToken = async (req, res) => {
     }
 };
 
+const methodLogout = async (req, res) => {
+    try {
+        // Verificar si la cookie con el token existe
+        if (!req.cookies.jwt) {
+            return res.status(400).json({ message: 'No hay sesión activa.' });
+        }
+
+        // Eliminar la cookie 'session'
+        res.clearCookie("jwt", {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'None',
+            path: '/',
+            domain: 'localhost'
+        });
+
+        res.json({ message: 'Sesión cerrada correctamente.' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al cerrar sesión.' });
+    }
+};
+
+
 module.exports = {
     getMethod,
     getUserToken,
@@ -203,5 +228,6 @@ module.exports = {
     deleteMethod,
     getMethodById,
     methodLogin,
+    methodLogout,
     setNewPassword
 };

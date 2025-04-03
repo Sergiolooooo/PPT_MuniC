@@ -1,5 +1,8 @@
 const database = require('../database/mysql');
 
+/**
+ * @param {...number} permisosRequeridos - Lista de permisos requeridos para acceder a la ruta.     
+ * **/
 function validarPermisos(...permisosRequeridos) {
   return async (req, res, next) => {
     try {
@@ -13,14 +16,14 @@ function validarPermisos(...permisosRequeridos) {
       if (!rows[0] || rows[0].length === 0) {
         return res.status(401).json({ msg: 'No tienes permisos asignados.' });
       }
-      const permisosUsuario = rows[0].map(row => row.nombre);
+      const permisosUsuario = rows[0].map(row => row.numero);
       console.log('Permisos del usuario: =>', `${permisosUsuario.join(", ")}`);
       console.log('Permisos requeridos: =>', `${permisosRequeridos.join(", ")}`);
       // Verifica si el usuario tiene al menos uno de los permisos requeridos
       if (permisosUsuario.some(permiso => permisosRequeridos.includes(permiso))) {
         return next();
       } else {
-        return res.status(401).json({ msg: `No tienes los siguientes permisos para acceder a este recurso: ${permisosRequeridos.join(', ')}.` });
+        return res.status(401).json({ msg: `No tienes los siguientes numeros de permisos para acceder a este recurso: ${permisosRequeridos.join(', ')}.` });
       }
     } catch (error) {
       console.error('Error validando permisos:', error);

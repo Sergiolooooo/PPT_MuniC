@@ -7,6 +7,13 @@ class tipoDatos {
         return { valid: true };
     }
 
+    static validateFloat(value, fieldName) {
+        if (value === undefined || value === null || value === '' || isNaN(parseFloat(value))) {
+            return { valid: false, error: `${fieldName} debe ser un número válido` };
+        }
+        return { valid: true };
+    }
+
     static validatePhone(phone) {
         const regex = /^[0-9]{8}$/; // Asegura que sean 8 dígitos numéricos
         if (!regex.test(phone)) {
@@ -23,7 +30,7 @@ class tipoDatos {
     }
 
     static validateAll(data) {
-        const { nombre_comercio, descripcion_comercio, url_google, telefono, video_youtube, id_categoria } = data;
+        const { nombre_comercio, descripcion_comercio, latitud, longitud, telefono, video_youtube, id_categoria } = data;
 
         let validationResult;
 
@@ -33,7 +40,10 @@ class tipoDatos {
         validationResult = this.validateText(descripcion_comercio);
         if (!validationResult.valid) return validationResult;
 
-        validationResult = this.validateText(url_google, "Ubicacion Google");
+        validationResult = this.validateFloat(latitud, "Latitud");
+        if (!validationResult.valid) return validationResult;
+
+        validationResult = this.validateFloat(longitud, "Longitud");
         if (!validationResult.valid) return validationResult;
 
         validationResult = this.validatePhone(telefono);
