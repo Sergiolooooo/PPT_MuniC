@@ -29,10 +29,16 @@ const deleteRol = async (id) => {
     return rows;
 };
 
+const getPermisosByIdRol = async (id_rol) => {  
+    const [[rows]] = await database.query('CALL Sp_GetPermisosPorRol(?)', [id_rol])
+    return rows;
+};
+
 module.exports = {
     getRoles,
     getRolById,
     createRol,
     updateRol,
-    deleteRol
+    deleteRol,
+    getPermisosByIdRol
 };

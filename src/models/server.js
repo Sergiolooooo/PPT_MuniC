@@ -9,20 +9,21 @@ class Server {
     this.app = express();
     this.port = process.env.PORT;
 
-    //Rutas
-    this.pathUsuarios = "/api/usuarios";
-    this.pathComercios = "/api/comercios";
-    this.categoria = "/api/categoriascomercios";
-    this.pathRol = "/api/rol";
-    this.pathProductos = "/api/productos";
-    this.pathRedesSociales = "/api/redesSociales";
-    this.pathAlbumComercio = "/api/albumComercio";
-    this.pathNoticias = "/api/noticias";
-    this.pathRolesUsuario = "/api/rolesUsuario";
+ //Rutas
+ this.pathUsuarios = "/api/usuarios";
+ this.pathComercios = "/api/comercios";
+ this.categoria = "/api/categoriascomercios";
+ this.pathRol = "/api/rol";
+ this.pathProductos = "/api/productos";
+ this.pathRedesSociales = "/api/redesSociales";
+ this.pathAlbumComercio = "/api/albumComercio";
+ this.pathNoticias = "/api/noticias";
+ this.pathRolPermiso = "/api/rol_permisos";
 
     this.middleware();
     this.routes();
   }
+
 
   routes() {
     this.app.use(this.pathUsuarios, require("../routes/usuarios"));
@@ -33,13 +34,13 @@ class Server {
     this.app.use(this.pathRedesSociales, require("../routes/redes_sociales"));
     this.app.use(this.pathAlbumComercio, require("../routes/album_imagenes"));
     this.app.use(this.pathNoticias, require("../routes/noticias"));
-    this.app.use(this.pathRolesUsuario, require("../routes/roles_usuarios"));
+    this.app.use(this.pathRolPermiso, require("../routes/rol_permiso"));
   }
 
   middleware() {
     this.app.use(express.static("public"));
     this.app.use(cors({
-      origin: ['https://practicafrontppt-production.up.railway.app','http://127.0.0.1:5500'],
+      origin: ['https://practicafrontppt-production.up.railway.app','http://127.0.0.1:5500','null'],
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       credentials: true
     }));

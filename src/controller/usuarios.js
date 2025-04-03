@@ -3,7 +3,7 @@ const { getDatos, getDatosById, createDatos, updateDatos, deleteDatos, datosLogi
 const tiposDatos = require('../validaciones/tipoUsuario');
 require("../../env/config");
 const jwt = require('jsonwebtoken');
-const { getRolUsuarioByIdUser } = require('../models/roles_usuarios');
+const { getPermisosByIdRol } = require('../models/rol');
 
 
 const getMethod = async (req, res) => {
@@ -61,7 +61,7 @@ const postMethod = async (req, res) => {
 const updateMethod = async (req, res) => {
     try {
         const { id } = req.params;
-        const { nombre_completo, email, estado } = req.body;
+        const { nombre_completo, email, estado, id_rol } = req.body;
 
         // Validaciones de datos de entrada
         let validation = tiposDatos.validateId(id,"id");
@@ -74,6 +74,9 @@ const updateMethod = async (req, res) => {
         if (!validation.valid) return res.status(200).json({ error: validation.error });
 
         validation = tiposDatos.validateEstado(estado,"estado");
+        if (!validation.valid) return res.status(200).json({ error: validation.error });
+
+        validation = tiposDatos.validateId(id_rol,"id_rol");
         if (!validation.valid) return res.status(200).json({ error: validation.error });
 
         // Llamada al modelo para actualizar el email, pasando la nueva password encriptada si es necesario
@@ -127,11 +130,11 @@ const methodLogin = async (req, res) => {
             return res.status(401).json({ message: 'Contraseña incorrecta.' });
         }
         // Obtener los roles del usuario (asegurarse de que sea un array vacío si no tiene roles)
-        const roles = await getRolUsuarioByIdUser(usuarios[0].id_usuario) || [];
-
+        const permisosUsuario = await getPermisosByIdRol(usuarios[0].id_rol) || [];
+        const permisos =  permisosUsuario.map(row => row.numero)
         // Crear objeto del usuario sin la contraseña
         const { password: _, ...usuarioSinPassword } = usuarios[0];
-        const usuarioConRoles = { ...usuarioSinPassword, roles };
+        const usuarioConRoles = { ...usuarioSinPassword, permisos };
 
         // Generar token JWT
         const token = jwt.sign(
@@ -192,6 +195,31 @@ const getUserToken = async (req, res) => {
     }
 };
 
+const methodLogout = async (req, res) => {
+    try {
+        // Verificar si la cookie con el token existe
+        if (!req.cookies.jwt) {
+            return res.status(400).json({ message: 'No hay sesión activa.' });
+        }
+
+        // Eliminar la cookie 'session'
+        res.clearCookie("jwt", {
+            httpOnly: true,
+            secure: false,
+            sameSite: 'None',
+            path: '/',
+            domain: 'localhost'
+        });
+
+        res.json({ message: 'Sesión cerrada correctamente.' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al cerrar sesión.' });
+    }
+};
+
+
 module.exports = {
     getMethod,
     getUserToken,
@@ -200,5 +228,6 @@ module.exports = {
     deleteMethod,
     getMethodById,
     methodLogin,
+    methodLogout,
     setNewPassword
 };

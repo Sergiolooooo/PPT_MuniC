@@ -11,19 +11,19 @@ const getNoticiaById = async (id_noticia) => {
 };
 
 const createNoticia = async (datos) => {
-    const { titulo, contenido, fecha_publicacion, id_usuario } = datos;
+    const { titulo, contenido, fecha_publicacion, id_usuario, imagen = null } = datos;
     const [result] = await database.query(
-        'CALL Sp_CreateNoticia(?,?,?,?)',
-        [titulo, contenido, fecha_publicacion, id_usuario]
+        'CALL Sp_CreateNoticia(?,?,?,?,?)',
+        [titulo, contenido, fecha_publicacion, id_usuario, imagen]
     );
 
     return result;  // Devuelve el resultado de la consulta con affectedRows
 };
 
 const updateNoticia = async (id, datos) => {
-    const { titulo = null, contenido = null, fecha_publicacion = null, id_usuario = null } = datos;
-    const [rows] = await database.query('CALL Sp_UpdateNoticia(?,?,?,?,?)', 
-        [id, titulo, contenido, fecha_publicacion, id_usuario]
+    const { titulo = null, contenido = null, fecha_publicacion = null, id_usuario = null, imagen = null } = datos;
+    const [rows] = await database.query('CALL Sp_UpdateNoticia(?,?,?,?,?,?)', 
+        [id, titulo, contenido, fecha_publicacion, id_usuario, imagen]
     );
     return rows;
 };
