@@ -11,15 +11,15 @@ const getDatosById = async (id) => {
 };
 
 const createDatos = async (datos) => {
-    const { nombre_categoria } = datos;
-    const [result] = await database.query('CALL Sp_CreateCategoriasComercios(?)', [nombre_categoria]);
+    const { nombre_categoria, imagen } = datos;
+    const [result] = await database.query('CALL Sp_CreateCategoriasComercios(?,?)', [nombre_categoria, imagen]);
     return result;
 };
 
 const updateDatos = async (id, datos) => {
-    const { nombre_categoria = null} = datos;
-    const [rows] = await database.query('CALL Sp_UpdateCategoriasComercios(?,?)', 
-        [id, nombre_categoria]
+    const { nombre_categoria = null, imagen = null } = datos;
+    const [rows] = await database.query('CALL Sp_UpdateCategoriasComercios(?,?,?)',
+        [id, nombre_categoria, imagen]
     );
     return rows;
 };

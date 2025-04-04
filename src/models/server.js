@@ -9,21 +9,21 @@ class Server {
     this.app = express();
     this.port = process.env.PORT;
 
- //Rutas
- this.pathUsuarios = "/api/usuarios";
- this.pathComercios = "/api/comercios";
- this.categoria = "/api/categoriascomercios";
- this.pathRol = "/api/rol";
- this.pathProductos = "/api/productos";
- this.pathRedesSociales = "/api/redesSociales";
- this.pathAlbumComercio = "/api/albumComercio";
- this.pathNoticias = "/api/noticias";
- this.pathRolPermiso = "/api/rol_permisos";
+    //Rutas
+    this.pathUsuarios = "/api/usuarios";
+    this.pathComercios = "/api/comercios";
+    this.categoria = "/api/categoriascomercios";
+    this.pathRol = "/api/rol";
+    this.pathProductos = "/api/productos";
+    this.pathRedesSociales = "/api/redesSociales";
+    this.pathAlbumComercio = "/api/albumComercio";
+    this.pathNoticias = "/api/noticias";
+    this.pathRolPermiso = "/api/rol_permisos";
+    this.pathEventos = "/api/eventos";
 
     this.middleware();
     this.routes();
   }
-
 
   routes() {
     this.app.use(this.pathUsuarios, require("../routes/usuarios"));
@@ -35,6 +35,7 @@ class Server {
     this.app.use(this.pathAlbumComercio, require("../routes/album_imagenes"));
     this.app.use(this.pathNoticias, require("../routes/noticias"));
     this.app.use(this.pathRolPermiso, require("../routes/rol_permiso"));
+    this.app.use(this.pathEventos, require("../routes/eventos"));
   }
 
   middleware() {
