@@ -37,7 +37,6 @@ class tipoIncidencia {
       latitud,
       longitud,
       id_incidencia,
-      estatus,
       provincia, 
       canton,
       distrito,
@@ -69,9 +68,6 @@ class tipoIncidencia {
     if (!validationResult.valid) return validationResult;
 
     validationResult = this.validateId(id_incidencia, "id_incidencia");
-    if (!validationResult.valid) return validationResult;
-
-    validationResult = this.validateText(estatus, "estatus");
     if (!validationResult.valid) return validationResult;
 
     validationResult = this.validateText(provincia, "provincia");
