@@ -19,7 +19,6 @@ const CreateIncidencia = async (datos) => {
         latitud, 
         longitud, 
         id_incidencia, 
-        estatus,
         provincia, 
         canton,
         distrito,
@@ -28,8 +27,8 @@ const CreateIncidencia = async (datos) => {
     } = datos;
     
     const [result] = await database.query(
-        'CALL Sp_CreateIncidencia(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [nombre_reportante, cedula_reportante, telefono_reportante, fecha_reporte, latitud, longitud, id_incidencia, estatus, provincia, canton, distrito, direccion_exacta, estado]
+        'CALL Sp_CreateIncidencia(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [nombre_reportante, cedula_reportante, telefono_reportante, fecha_reporte, latitud, longitud, id_incidencia,provincia, canton, distrito, direccion_exacta, estado]
     );
     return result;
 };
@@ -43,7 +42,6 @@ const updateIncidencia = async (id_reporte_incidencia, datos) => {
         latitud = null, 
         longitud = null, 
         id_incidencia = null, 
-        estatus = null,
         provincia = null, 
         canton = null,
         distrito = null,    
@@ -51,8 +49,8 @@ const updateIncidencia = async (id_reporte_incidencia, datos) => {
         estado = null
 
     } = datos;
-    const query = 'CALL Sp_UpdateIncidencia(?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?)';
-    const values = [id_reporte_incidencia, nombre_reportante, cedula_reportante, telefono_reportante, fecha_reporte, latitud, longitud, id_incidencia, estatus, provincia, canton, distrito, direccion_exacta, estado];
+    const query = 'CALL Sp_UpdateIncidencia(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const values = [id_reporte_incidencia, nombre_reportante, cedula_reportante, telefono_reportante, fecha_reporte, latitud, longitud, id_incidencia, provincia, canton, distrito, direccion_exacta, estado];
     const [rows] = await database.query(query, values);
     return rows;
 };

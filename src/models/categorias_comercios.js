@@ -2,8 +2,21 @@ const database = require('../database/mysql');
 
 const getDatos = async () => {
     const [[rows]] = await database.query('CALL Sp_GetCategoriasComercios();');
-    return rows;
+
+    const categorias = rows.map(categoria => {
+        if (categoria.imagen && Buffer.isBuffer(categoria.imagen)) {
+            const base64Image = categoria.imagen.toString("base64");
+            categoria.imagen = `data:image/png;base64,${base64Image}`;
+        } else {
+            categoria.imagen = null;
+        }
+        return categoria;
+    });
+
+    return categorias;
 };
+
+
 
 const getDatosById = async (id) => {
     const [[rows]] = await database.query('CALL Sp_GetByIdCategoriasComercios(?);', [id]);
