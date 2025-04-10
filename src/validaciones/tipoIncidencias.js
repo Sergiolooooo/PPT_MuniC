@@ -38,7 +38,6 @@ class tipoIncidencia {
       canton,
       distrito,
       direccion_exacta,
-      estado
     } = data;
 
     let validationResult;
@@ -70,8 +69,6 @@ class tipoIncidencia {
     validationResult = this.validateText(direccion_exacta, "direccion_exacta");
     if (!validationResult.valid) return validationResult;
 
-    validationResult = this.validateText(estado, "estado");
-    if (!validationResult.valid) return validationResult; 
 
     return { valid: true };
   }

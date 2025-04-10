@@ -40,8 +40,6 @@ const getMethodIncidenciaById = async (req, res) => {
 
 const postMethodIncidencia = async (req, res) => {
     try {
-
-        // Verificar si req.body.data existe y convertirlo a JSON si es un string
         if (req.body.data && typeof req.body.data === "string") {
             try {
                 req.body = JSON.parse(req.body.data);
@@ -49,11 +47,10 @@ const postMethodIncidencia = async (req, res) => {
                 return res.status(400).json({ success: false, message: "El JSON enviado tiene un formato incorrecto." });
             }
         }
-        // Verificar si se subió una imagen
         if (req.files && req.files.length > 0) {
-            // Agregar la imagen en formato Buffer a los datos
             req.body.imagen = req.files[0].buffer;
         }
+   
         const validation = tiposDatos.validateAll(req.body);
         if (!validation.valid) {
             return res.status(400).json({ success: false, error: validation.error });
@@ -68,6 +65,7 @@ const postMethodIncidencia = async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 };
+
 
 const updateMethodIncidenciaController = async (req, res) => {
     try {

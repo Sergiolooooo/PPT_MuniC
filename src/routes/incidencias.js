@@ -20,7 +20,8 @@ router.get('/', validateToken, getMethodIncidencias);
 router.get('/:id', validateToken, getMethodIncidenciaById);
 
 // Ruta para crear una nueva incidencia
-router.post('/', validarArchivos,validateToken,  postMethodIncidencia);
+// End point público
+router.post('/', validarArchivos,  postMethodIncidencia);
 
 // Ruta para actualizar una incidencia
 router.put('/:id', validateToken, validarArchivos, updateMethodIncidenciaController);

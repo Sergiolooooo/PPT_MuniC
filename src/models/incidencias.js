@@ -20,16 +20,26 @@ const CreateIncidencia = async (datos) => {
         canton,
         distrito,
         direccion_exacta,
-        estado,
         imagen
     } = datos;
 
     const [result] = await database.query(
-        'CALL Sp_CreateIncidencia(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [nombre_reportante, cedula_reportante, telefono_reportante, id_incidencia, provincia, canton, distrito, direccion_exacta, estado, imagen]
+        'CALL Sp_CreateIncidencia(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+            nombre_reportante,
+            cedula_reportante,
+            telefono_reportante,
+            id_incidencia,
+            provincia,
+            canton,
+            distrito,
+            direccion_exacta,
+            imagen
+        ]
     );
     return result;
 };
+
 
 const updateIncidencia = async (id_reporte_incidencia, datos) => {
     const {
