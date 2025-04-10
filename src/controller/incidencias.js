@@ -40,14 +40,21 @@ const getMethodIncidenciaById = async (req, res) => {
 
 const postMethodIncidencia = async (req, res) => {
     try {
+        if (req.body.data && typeof req.body.data === "string") {
+            try {
+                req.body = JSON.parse(req.body.data);
+            } catch (jsonError) {
+                return res.status(400).json({ success: false, message: "El JSON enviado tiene un formato incorrecto." });
+            }
+        }
+        if (req.files && req.files.length > 0) {
+            req.body.imagen = req.files[0].buffer;
+        }
+   
         const validation = tiposDatos.validateAll(req.body);
         if (!validation.valid) {
             return res.status(400).json({ success: false, error: validation.error });
         }
-        // Convertir fecha y hora al formato correcto
-        const date = new Date(req.body.fecha_reporte);
-        const fechaUTC = new Date(date + " UTC").toISOString().slice(0, 19).replace("T", " ");
-        req.body.fecha_reporte = fechaUTC;
         const resultado = await CreateIncidencia(req.body);
         if (resultado && resultado.affectedRows > 0) {
             res.status(201).json({ success: true, message: 'Incidencia creada exitosamente' });
@@ -59,24 +66,34 @@ const postMethodIncidencia = async (req, res) => {
     }
 };
 
+
 const updateMethodIncidenciaController = async (req, res) => {
     try {
         const { id } = req.params;
-        const datosActualizados = req.body;
 
         let validation = tiposDatos.validateId(id, "id_reporte_incidencia");
         if (!validation.valid) return res.status(200).json({ error: validation.error });
+
+        // Verificar si req.body.data existe y convertirlo a JSON si es un string
+        if (req.body.data && typeof req.body.data === "string") {
+            try {
+                req.body = JSON.parse(req.body.data);
+            } catch (jsonError) {
+                return res.status(400).json({ success: false, message: "El JSON enviado tiene un formato incorrecto." });
+            }
+        }
+        // Verificar si se subió una imagen
+        if (req.files && req.files.length > 0) {
+            // Agregar la imagen en formato Buffer a los datos
+            req.body.imagen = req.files[0].buffer;
+        }
 
         validation = tiposDatos.validateAll(req.body);
         if (!validation.valid) {
             return res.status(400).json({ success: false, error: validation.error });
         }
-        // Convertir fecha y hora al formato correcto
-        const date = new Date(req.body.fecha_reporte);
-        const fechaUTC = new Date(date + " UTC").toISOString().slice(0, 19).replace("T", " ");
-        req.body.fecha_reporte = fechaUTC;
 
-        const resultado = await updateIncidencia(id, datosActualizados);
+        const resultado = await updateIncidencia(id, req.body);
         if (resultado && resultado.affectedRows > 0) {
             res.status(200).json({ success: true, message: 'Incidencia actualizada exitosamente' });
         } else {
