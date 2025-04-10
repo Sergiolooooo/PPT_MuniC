@@ -16,9 +16,9 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 2 * 1024 * 1024 }, // Máx 2MB
+  limits: { fileSize: 2 * 1024 * 1024 },
   fileFilter: fileFilter
-}).array('files', 1); // Solo una imagen
+}).single('imagen'); // ✅ cambio aquí
 
 const validarUnaImagen = (req, res, next) => {
   upload(req, res, (err) => {
@@ -28,7 +28,7 @@ const validarUnaImagen = (req, res, next) => {
       }
       return res.status(400).json({ success: false, message: err.message });
     }
-//PUT
+
     return next();
   });
 };

@@ -42,10 +42,10 @@ const postMethod = async (req, res) => {
             }
         }
         // Verificar si se subió una imagen
-        if (req.files && req.files.length > 0) {
-            // Agregar la imagen en formato Buffer a los datos
-            req.body.imagen = req.files[0].buffer;
+        if (req.file) {
+            req.body.imagen = req.file.buffer;
         }
+        
         const { nombre_categoria } = req.body;
         let validation = tiposDatos.validateText(nombre_categoria);
         if (!validation.valid) return res.status(200).json({ error: validation.error });
@@ -73,10 +73,10 @@ const updateMethod = async (req, res) => {
             }
         }
         // Verificar si se subió una imagen
-        if (req.files && req.files.length > 0) {
-            // Agregar la imagen en formato Buffer a los datos
-            req.body.imagen = req.files[0].buffer;
+        if (req.file) {
+            req.body.imagen = req.file.buffer;
         }
+        
 
         const datosActualizados = req.body;
         const resultado = await updateDatos(id, datosActualizados);
