@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { validateToken } = require('../validaciones/validateToken');
+const { validarArchivos } = require('../utils/multer');
 const { validarPermisos } = require('../utils/validarPermisos');
 
 const {
@@ -19,12 +20,12 @@ router.get('/', validateToken, getMethodIncidencias);
 router.get('/:id', validateToken, getMethodIncidenciaById);
 
 // Ruta para crear una nueva incidencia
-router.post('/', validateToken, postMethodIncidencia);
+router.post('/', validarArchivos,validateToken,  postMethodIncidencia);
 
 // Ruta para actualizar una incidencia
-router.put('/:id', validateToken,  updateMethodIncidenciaController);
+router.put('/:id', validateToken, validarArchivos, updateMethodIncidenciaController);
 
 // Ruta para eliminar una incidencia
-router.delete('/:id', validateToken,   deleteMethodIncidenciaController);
+router.delete('/:id', validateToken, deleteMethodIncidenciaController);
 
 module.exports = router;
