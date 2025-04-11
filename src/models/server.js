@@ -20,6 +20,8 @@ class Server {
     this.pathNoticias = "/api/noticias";
     this.pathRolPermiso = "/api/rol_permisos";
     this.pathEventos = "/api/eventos";
+    this.pathListadoIncidencias = "/api/listadoincidencias";
+    this.pathIncidencias = "/api/incidencias";
 
     this.middleware();
     this.routes();
@@ -36,6 +38,8 @@ class Server {
     this.app.use(this.pathNoticias, require("../routes/noticias"));
     this.app.use(this.pathRolPermiso, require("../routes/rol_permiso"));
     this.app.use(this.pathEventos, require("../routes/eventos"));
+    this.app.use(this.pathListadoIncidencias, require("../routes/listado_incidencias"));
+    this.app.use(this.pathIncidencias, require("../routes/incidencias"));
   }
 
   middleware() {
