@@ -13,7 +13,8 @@ const {
 const router = Router();
 
 // Ruta para obtener todas las incidencias
-router.get('/', validateToken, getIncidencias);
+//Ruta Utilizada en Android
+router.get('/', getIncidencias);
 
 // Ruta para obtener una incidencia por ID
 router.get('/:id', validateToken, getIncidenciaById);
