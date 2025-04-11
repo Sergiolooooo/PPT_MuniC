@@ -20,7 +20,7 @@ router.get('/', validateToken, getMethodIncidencias);
 router.get('/:id', validateToken, getMethodIncidenciaById);
 
 // Ruta para crear una nueva incidencia
-// End point público
+// End point utilizado en Android
 router.post('/', validarUnaImagen,  postMethodIncidencia);
 
 // Ruta para actualizar una incidencia
