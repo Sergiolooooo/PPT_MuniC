@@ -40,6 +40,11 @@ const getMethodIncidenciaById = async (req, res) => {
 
 const postMethodIncidencia = async (req, res) => {
     try {
+        // Mostrar todos los campos que llegan
+        console.log("📦 Campos recibidos:", Object.keys(req.body));
+        if (req.files) {
+            console.log("🖼️ Archivos recibidos:", req.files.map(file => file.fieldname));
+        }
 
         // Validar si body.data viene como string (por compatibilidad)
         if (req.body.data && typeof req.body.data === "string") {
