@@ -13,7 +13,8 @@ const {
 const router = Router();
 
 // Ruta para obtener todos los eventos
-router.get('/', validateToken, getMethod);
+// Ruta utiizada en Android
+router.get('/', getMethod);
 
 // Ruta para obtener un evento por ID
 router.get('/:id', validateToken, getMethodById);

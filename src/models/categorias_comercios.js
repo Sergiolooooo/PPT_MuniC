@@ -1,12 +1,15 @@
 const database = require('../database/mysql');
+const { getMimeType } = require('../utils/getMimeType');
+
 
 const getDatos = async () => {
     const [[rows]] = await database.query('CALL Sp_GetCategoriasComercios();');
 
     const categorias = rows.map(categoria => {
         if (categoria.imagen && Buffer.isBuffer(categoria.imagen)) {
+            const mimeType = getMimeType(categoria.imagen);
             const base64Image = categoria.imagen.toString("base64");
-            categoria.imagen = `data:image/png;base64,${base64Image}`;
+            categoria.imagen = `data:${mimeType};base64,${base64Image}`;
         } else {
             categoria.imagen = null;
         }
@@ -15,7 +18,6 @@ const getDatos = async () => {
 
     return categorias;
 };
-
 
 
 const getDatosById = async (id) => {
