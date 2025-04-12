@@ -1,8 +1,21 @@
 const database = require('../database/mysql');
+const { getMimeType } = require('../utils/getMimeType');
 
 const getNoticias = async () => {
     const [[rows]] = await database.query('CALL Sp_GetNoticias();');
-    return rows;  // Devuelve las noticias obtenidas
+
+    const noticias = rows.map(noticia => {
+        if (noticia.imagen && Buffer.isBuffer(noticia.imagen)) {
+            const mimeType = getMimeType(noticia.imagen);
+            const base64Image = noticia.imagen.toString("base64");
+            noticia.imagen = `data:${mimeType};base64,${base64Image}`;
+        } else {
+            noticia.imagen = null;
+        }
+        return noticia;
+    });
+
+    return noticias;
 };
 
 const getNoticiaById = async (id_noticia) => {

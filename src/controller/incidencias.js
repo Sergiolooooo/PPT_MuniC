@@ -9,14 +9,14 @@ const tiposDatos = require('../validaciones/tipoIncidencias');
 
 const getMethodIncidencias = async (req, res) => {
     try {
-        const incidencias = await GetIncidencias();
-        if (incidencias.length > 0) {
-            res.json({ success: true, data: incidencias });
+        const noticias = await getNoticias();
+        if (noticias.length > 0) {
+            res.json({ success: true, data: noticias });
         } else {
-            res.status(404).json({ success: false, message: 'No se encontraron incidencias' });
+            res.status(404).json({ success: false, message: 'No se encontraron noticias' });
         }
     } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+        res.status(500).json({ error: error.message });
     }
 };
 
