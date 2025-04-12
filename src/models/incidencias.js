@@ -11,48 +11,52 @@ const getIncidenciaById = async (id_reporte_incidencia) => {
 };
 
 const CreateIncidencia = async (datos) => {
-    const { 
-        nombre_reportante, 
-        cedula_reportante, 
-        telefono_reportante, 
-        fecha_reporte, 
-        latitud, 
-        longitud, 
-        id_incidencia, 
-        estatus,
-        provincia, 
+    const {
+        nombre_reportante,
+        cedula_reportante,
+        telefono_reportante,
+        id_incidencia,
+        provincia,
         canton,
         distrito,
         direccion_exacta,
-        estado
+        imagen
     } = datos;
-    
+
     const [result] = await database.query(
-        'CALL Sp_CreateIncidencia(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-        [nombre_reportante, cedula_reportante, telefono_reportante, fecha_reporte, latitud, longitud, id_incidencia, estatus, provincia, canton, distrito, direccion_exacta, estado]
+        'CALL Sp_CreateIncidencia(?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        [
+            nombre_reportante,
+            cedula_reportante,
+            telefono_reportante,
+            id_incidencia,
+            provincia,
+            canton,
+            distrito,
+            direccion_exacta,
+            imagen
+        ]
     );
     return result;
 };
 
+
 const updateIncidencia = async (id_reporte_incidencia, datos) => {
-    const { 
-        nombre_reportante = null, 
-        cedula_reportante = null, 
-        telefono_reportante = null, 
-        fecha_reporte = null, 
-        latitud = null, 
-        longitud = null, 
-        id_incidencia = null, 
-        estatus = null,
-        provincia = null, 
+    const {
+        nombre_reportante = null,
+        cedula_reportante = null,
+        telefono_reportante = null,
+        id_incidencia = null,
+        provincia = null,
         canton = null,
-        distrito = null,    
+        distrito = null,
         direccion_exacta = null,
-        estado = null
+        estado = null,
+        imagen = null
 
     } = datos;
-    const query = 'CALL Sp_UpdateIncidencia(?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?, ?, ?, ?)';
-    const values = [id_reporte_incidencia, nombre_reportante, cedula_reportante, telefono_reportante, fecha_reporte, latitud, longitud, id_incidencia, estatus, provincia, canton, distrito, direccion_exacta, estado];
+    const query = 'CALL Sp_UpdateIncidencia(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    const values = [id_reporte_incidencia, nombre_reportante, cedula_reportante, telefono_reportante, id_incidencia, provincia, canton, distrito, direccion_exacta, estado , imagen];
     const [rows] = await database.query(query, values);
     return rows;
 };

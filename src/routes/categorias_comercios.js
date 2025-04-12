@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const { validateToken } = require('../validaciones/validateToken');
+const { validarUnaImagen } = require('../utils/multerUnaImagen');
 const {
     getMethod,
     getMethodById,
@@ -10,10 +11,10 @@ const {
 
 const router = Router();
 
-router.get('/',  getMethod);
+router.get('/', getMethod);
 router.get('/:id', getMethodById);
-router.post('/', postMethod);
-router.put('/:id', updateMethod);
+router.post('/', validarUnaImagen, postMethod);
+router.put('/:id', validarUnaImagen, updateMethod);
 router.delete('/:id', deleteMethod);
 
 module.exports = router;

@@ -33,16 +33,11 @@ class tipoIncidencia {
       nombre_reportante,
       cedula_reportante,
       telefono_reportante,
-      fecha_reporte,
-      latitud,
-      longitud,
       id_incidencia,
-      estatus,
       provincia, 
       canton,
       distrito,
       direccion_exacta,
-      estado
     } = data;
 
     let validationResult;
@@ -59,19 +54,7 @@ class tipoIncidencia {
       if (!validationResult.valid) return validationResult;
     }
 
-    validationResult = this.validateDatetime(fecha_reporte, "fecha_reporte");
-    if (!validationResult.valid) return validationResult;
-
-    validationResult = this.validateNumber(latitud, "latitud");
-    if (!validationResult.valid) return validationResult;
-
-    validationResult = this.validateNumber(longitud, "longitud");
-    if (!validationResult.valid) return validationResult;
-
     validationResult = this.validateId(id_incidencia, "id_incidencia");
-    if (!validationResult.valid) return validationResult;
-
-    validationResult = this.validateText(estatus, "estatus");
     if (!validationResult.valid) return validationResult;
 
     validationResult = this.validateText(provincia, "provincia");
@@ -86,8 +69,6 @@ class tipoIncidencia {
     validationResult = this.validateText(direccion_exacta, "direccion_exacta");
     if (!validationResult.valid) return validationResult;
 
-    validationResult = this.validateText(estado, "estado");
-    if (!validationResult.valid) return validationResult; 
 
     return { valid: true };
   }

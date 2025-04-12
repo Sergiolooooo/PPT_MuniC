@@ -2,8 +2,21 @@ const database = require('../database/mysql');
 
 const getDatos = async () => {
     const [[rows]] = await database.query('CALL Sp_GetCategoriasComercios();');
-    return rows;
+
+    const categorias = rows.map(categoria => {
+        if (categoria.imagen && Buffer.isBuffer(categoria.imagen)) {
+            const base64Image = categoria.imagen.toString("base64");
+            categoria.imagen = `data:image/png;base64,${base64Image}`;
+        } else {
+            categoria.imagen = null;
+        }
+        return categoria;
+    });
+
+    return categorias;
 };
+
+
 
 const getDatosById = async (id) => {
     const [[rows]] = await database.query('CALL Sp_GetByIdCategoriasComercios(?);', [id]);
@@ -11,15 +24,15 @@ const getDatosById = async (id) => {
 };
 
 const createDatos = async (datos) => {
-    const { nombre_categoria } = datos;
-    const [result] = await database.query('CALL Sp_CreateCategoriasComercios(?)', [nombre_categoria]);
+    const { nombre_categoria, imagen } = datos;
+    const [result] = await database.query('CALL Sp_CreateCategoriasComercios(?,?)', [nombre_categoria, imagen]);
     return result;
 };
 
 const updateDatos = async (id, datos) => {
-    const { nombre_categoria = null} = datos;
-    const [rows] = await database.query('CALL Sp_UpdateCategoriasComercios(?,?)', 
-        [id, nombre_categoria]
+    const { nombre_categoria = null, imagen = null } = datos;
+    const [rows] = await database.query('CALL Sp_UpdateCategoriasComercios(?,?,?)',
+        [id, nombre_categoria, imagen]
     );
     return rows;
 };

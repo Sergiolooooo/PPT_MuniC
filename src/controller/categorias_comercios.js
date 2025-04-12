@@ -33,14 +33,30 @@ const getMethodById = async (req, res) => {
 
 const postMethod = async (req, res) => {
     try {
+        // Verificar si req.body.data existe y convertirlo a JSON si es un string
+        if (req.body.data && typeof req.body.data === "string") {
+            try {
+                req.body = JSON.parse(req.body.data);
+            } catch (jsonError) {
+                return res.status(400).json({ success: false, message: "El JSON enviado tiene un formato incorrecto." });
+            }
+        }
+        // Verificar si se subió una imagen
+        if (req.file) {
+            req.body.imagen = req.file.buffer;
+        }
+        
         const { nombre_categoria } = req.body;
-
         let validation = tiposDatos.validateText(nombre_categoria);
         if (!validation.valid) return res.status(200).json({ error: validation.error });
-
-        const [resultado] = await createDatos(req.body);
-        res.status(201).json({ success: true, message: resultado.Resultado });
-
+        const resultado = await createDatos(req.body);
+        console.log(resultado);
+        
+        if (resultado && resultado.affectedRows > 0) {
+            res.status(201).json({ success: true, message: 'Categoria creada exitosamente' });
+        } else {
+            res.status(400).json({ success: false, message: 'Error al crear la categoria' });
+        }
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -49,6 +65,19 @@ const postMethod = async (req, res) => {
 const updateMethod = async (req, res) => {
     try {
         const { id } = req.params;
+        if (req.body.data && typeof req.body.data === "string") {
+            try {
+                req.body = JSON.parse(req.body.data);
+            } catch (jsonError) {
+                return res.status(400).json({ success: false, message: "El JSON enviado tiene un formato incorrecto." });
+            }
+        }
+        // Verificar si se subió una imagen
+        if (req.file) {
+            req.body.imagen = req.file.buffer;
+        }
+        
+
         const datosActualizados = req.body;
         const resultado = await updateDatos(id, datosActualizados);
 
