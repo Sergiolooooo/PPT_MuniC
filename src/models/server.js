@@ -24,6 +24,7 @@ class Server {
     this.pathIncidencias = "/api/incidencias";
 
 
+
     this.middleware();
     this.routes();
   }
@@ -41,6 +42,7 @@ class Server {
     this.app.use(this.pathEventos, require("../routes/eventos"));
     this.app.use(this.pathListadoIncidencias, require("../routes/listado_incidencias"));
     this.app.use(this.pathIncidencias, require("../routes/incidencias"));
+
 
   }
 
