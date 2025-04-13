@@ -44,11 +44,15 @@ const postMethod = async (req, res) => {
                 return res.status(400).json({ success: false, message: "El JSON enviado tiene un formato incorrecto." });
             }
         }
-        // Verificar si se subió una imagen
-        if (req.files && req.files.length > 0) {
-            // Agregar la imagen en formato Buffer a los datos
-            req.body.imagen = req.files[0].buffer;
+         // Asignar la imagen si fue subida
+         if (req.file) {
+            req.body.imagen = req.file.buffer;
         }
+
+        if (req.body.id_usuario) {
+            req.body.id_usuario = parseInt(req.body.id_usuario);
+        }
+        
         const validation = tiposDatos.validateAll(req.body);
         if (!validation.valid) {
             return res.status(400).json({ success: false, error: validation.error });
