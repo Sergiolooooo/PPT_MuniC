@@ -132,7 +132,8 @@ const updateMethodIncidenciaController = async (req, res) => {
         }
 
         const resultado = await updateIncidencia(id, req.body);
-        if (resultado && resultado.affectedRows > 0) {
+        console.log("Validación de datos:", resultado);
+        if (resultado && resultado.length > 0) {
             res.status(200).json({ success: true, message: 'Incidencia actualizada exitosamente' });
         } else {
             res.status(400).json({ success: false, message: 'Error al actualizar la incidencia o incidencia no encontrada' });

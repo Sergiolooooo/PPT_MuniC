@@ -14,7 +14,7 @@ const {
 const router = Router();
 
 // Ruta para obtener todas las incidencias
-router.get('/', validateToken, getMethodIncidencias);
+router.get('/', getMethodIncidencias);
 
 // Ruta para obtener una incidencia por ID
 router.get('/:id', validateToken, getMethodIncidenciaById);
@@ -24,7 +24,7 @@ router.get('/:id', validateToken, getMethodIncidenciaById);
 router.post('/', validarUnaImagen,  postMethodIncidencia);
 
 // Ruta para actualizar una incidencia
-router.put('/:id', validateToken, validarUnaImagen, updateMethodIncidenciaController);
+router.put('/:id', validarUnaImagen, updateMethodIncidenciaController);
 
 // Ruta para eliminar una incidencia
 router.delete('/:id', validateToken, deleteMethodIncidenciaController);
