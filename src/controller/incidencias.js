@@ -9,16 +9,19 @@ const tiposDatos = require('../validaciones/tipoIncidencias');
 
 const getMethodIncidencias = async (req, res) => {
     try {
-        const noticias = await getNoticias();
-        if (noticias.length > 0) {
-            res.json({ success: true, data: noticias });
+        const incidencias = await GetIncidencias();
+
+        if (incidencias.length > 0) {
+            res.json({ success: true, data: incidencias });
         } else {
-            res.status(404).json({ success: false, message: 'No se encontraron noticias' });
+            res.status(404).json({ success: false, message: 'No se encontraron incidencias' });
         }
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("❌ Error al obtener incidencias:", error.message);
+        res.status(500).json({ success: false, error: error.message });
     }
 };
+
 
 const getMethodIncidenciaById = async (req, res) => {
     try {
@@ -103,8 +106,6 @@ const postMethodIncidencia = async (req, res) => {
     }
 };
 
-
-
 const updateMethodIncidenciaController = async (req, res) => {
     try {
         const { id } = req.params;
@@ -124,7 +125,6 @@ const updateMethodIncidenciaController = async (req, res) => {
         if (req.file) {
             req.body.imagen = req.file.buffer;
         }
-        
 
         validation = tiposDatos.validateAll(req.body);
         if (!validation.valid) {
@@ -141,6 +141,7 @@ const updateMethodIncidenciaController = async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 };
+
 
 const deleteMethodIncidenciaController = async (req, res) => {
     try {
