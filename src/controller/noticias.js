@@ -71,36 +71,37 @@ const postMethod = async (req, res) => {
 const updateMethod = async (req, res) => {
     try {
         const { id } = req.params;
-        // Verificar si req.body.data existe y convertirlo a JSON si es un string
+
         if (req.body.data && typeof req.body.data === "string") {
             try {
                 req.body = JSON.parse(req.body.data);
             } catch (jsonError) {
-                return res.status(400).json({ success: false, message: "El JSON enviado tiene un formato incorrecto." });
+                return res.status(400).json({ success: false, message: "Datos incorrectos" });
             }
         }
-        // Verificar si se subió una imagen
-        if (req.files && req.files.length > 0) {
-            // Agregar la imagen en formato Buffer a los datos
-            req.body.imagen = req.files[0].buffer;
+
+        // Imagen (opcional)
+        if (req.file) {
+            req.body.imagen = req.file.buffer;
         }
-        
-        const validation = tiposDatos.validateAll(req.body);
-        if (!validation.valid) {
-            return res.status(400).json({ success: false, error: validation.error });
-        }
-        const resultado = await updateNoticia(id, req.body);
+
+        const { titulo, contenido, fecha_publicacion, imagen } = req.body;
+
+        const datosActualizados = { titulo, contenido, fecha_publicacion, imagen };
+
+        const resultado = await updateNoticia(id, datosActualizados);
 
         if (resultado && resultado.affectedRows > 0) {
             res.status(200).json({ success: true, message: 'Noticia actualizada exitosamente' });
         } else {
-            res.status(400).json({ success: false, message: 'Error al actualizar la noticia o noticia no encontrada' });
+            res.status(400).json({ success: false, message: 'No se actualizó ninguna noticia' });
         }
 
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ success: false, error: error.message });
     }
 };
+
 
 const deleteMethod = async (req, res) => {
     try {
