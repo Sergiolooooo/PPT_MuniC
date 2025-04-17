@@ -34,12 +34,13 @@ const createNoticia = async (datos) => {
 };
 
 const updateNoticia = async (id, datos) => {
-    const { titulo = null, contenido = null, fecha_publicacion = null, id_usuario = null, imagen = null } = datos;
-    const [rows] = await database.query('CALL Sp_UpdateNoticia(?,?,?,?,?,?)', 
-        [id, titulo, contenido, fecha_publicacion, id_usuario, imagen]
+    const { titulo = null, contenido = null, fecha_publicacion = null, imagen = null } = datos;
+    const [rows] = await database.query('CALL Sp_UpdateNoticia(?,?,?,?,?)', 
+        [id, titulo, contenido, fecha_publicacion, imagen]
     );
     return rows;
 };
+
 
 const deleteNoticia = async (id) => {
     const [rows] = await database.query('CALL Sp_DeleteNoticia(?)', [id]);

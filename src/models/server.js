@@ -23,9 +23,7 @@ class Server {
     this.pathListadoIncidencias = "/api/listadoincidencias";
     this.pathIncidencias = "/api/incidencias";
     this.pathPermisos = "/api/permisos";
-
-
-
+    this.pathIncidenciasDashBoard = "/api/incidenciasDashBoard";
     this.middleware();
     this.routes();
   }
@@ -44,7 +42,7 @@ class Server {
     this.app.use(this.pathListadoIncidencias, require("../routes/listado_incidencias"));
     this.app.use(this.pathIncidencias, require("../routes/incidencias"));
     this.app.use(this.pathPermisos, require("../routes/permisos"));
-
+    this.app.use(this.pathIncidenciasDashBoard, require("../routes/incidenciasDashboard"));
 
   }
 
