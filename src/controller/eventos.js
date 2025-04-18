@@ -40,21 +40,48 @@ const getMethodById = async (req, res) => {
 
 const postMethod = async (req, res) => {
     try {
+        // Verificar si req.body.data existe y convertirlo a JSON si es un string
+        if (req.body.data && typeof req.body.data === "string") {
+            try {
+                req.body = JSON.parse(req.body.data);
+            } catch (jsonError) {
+                return res.status(400).json({ success: false, message: "El JSON enviado tiene un formato incorrecto." });
+            }
+        }
 
-        validation = tiposDatos.validateAll(req.body);
+        // Convertir imagen
+        if (req.file) {
+            req.body.imagen = req.file.buffer;
+        }
+
+        if (req.body.id_usuario) {
+            req.body.id_usuario = parseInt(req.body.id_usuario);
+        }
+
+        if (req.body.fecha_evento) {
+            const fechaInicio = new Date(req.body.fecha_evento + " UTC");
+            req.body.fecha_evento = fechaInicio.toISOString().slice(0, 19).replace("T", " ");
+        }
+
+        if (req.body.fecha_fin) {
+            const fechaFin = new Date(req.body.fecha_fin + " UTC");
+            req.body.fecha_fin = fechaFin.toISOString().slice(0, 19).replace("T", " ");
+        }
+
+        // Validación
+        const validation = tiposDatos.validateAll(req.body);
         if (!validation.valid) {
             return res.status(400).json({ success: false, error: validation.error });
         }
-        // Convertir fecha y hora al formato correcto
-        const date = new Date(req.body.fecha_evento);
-        const fechaUTC = new Date(date + " UTC").toISOString().slice(0, 19).replace("T", " ");
-        req.body.fecha_evento = fechaUTC;
+
         const resultado = await CreateEvento(req.body);
+
         if (resultado && resultado.affectedRows > 0) {
             res.status(201).json({ success: true, message: 'Evento creado exitosamente' });
         } else {
             res.status(400).json({ success: false, message: 'Error al crear el evento' });
         }
+
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }

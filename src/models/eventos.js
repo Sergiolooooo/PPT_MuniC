@@ -11,13 +11,19 @@ const getEventoById = async (id_evento) => {
 };
 
 const CreateEvento = async (datos) => {
-    const { nombre_evento, descripcion_evento, fecha_evento, lugar, id_usuario } = datos;
+    const {
+        nombre_evento, descripcion_evento, fecha_evento, fecha_fin, lugar, imagen, id_usuario} = datos;
+
     const [result] = await database.query(
-        'CALL Sp_CreateEvento(?, ?, ?, ?, ?)',
-        [nombre_evento, descripcion_evento, fecha_evento, lugar, id_usuario]
+        'CALL Sp_CreateEvento(?, ?, ?, ?, ?, ?, ?)',
+        [
+            nombre_evento, descripcion_evento, fecha_evento, fecha_fin, lugar, imagen, id_usuario
+        ]
     );
+
     return result;
 };
+
 
 const updateEvento = async (id_evento, datos) => {
     const { nombre_evento = null, descripcion_evento = null, fecha_evento = null, lugar = null, id_usuario = null } = datos;

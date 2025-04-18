@@ -23,16 +23,19 @@ class TipoEvento {
   }
 
   static validateAll(data) {
-      const { nombre_evento, descripcion_evento, fecha_evento, estado, id_categoria } = data;
+      const { nombre_evento, descripcion_evento, fecha_evento, fecha_fin, id_categoria } = data;
       let validationResult;
 
-      validationResult = this.validateText(nombre_evento, "nombre_evento");
+      validationResult = this.validateText(nombre_evento, "nombre del evento");
       if (!validationResult.valid) return validationResult;
 
-      validationResult = this.validateText(descripcion_evento, "descripcion_evento");
+      validationResult = this.validateText(descripcion_evento, "descripcion del evento");
       if (!validationResult.valid) return validationResult;
 
-      validationResult = this.validateDatetime(fecha_evento, "fecha_evento");
+      validationResult = this.validateDatetime(fecha_evento, "fecha del evento");
+      if (!validationResult.valid) return validationResult;
+
+      validationResult = this.validateDatetime(fecha_fin, "fecha fin del evento");
       if (!validationResult.valid) return validationResult;
 
       return { valid: true };

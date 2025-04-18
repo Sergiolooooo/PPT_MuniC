@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const { validateToken } = require('../validaciones/validateToken');
 const { validarPermisos } = require('../utils/validarPermisos');
+const { validarUnaImagen } = require('../utils/multerUnaImagen');
 
 const {
     postMethod,
@@ -20,7 +21,7 @@ router.get('/', getMethod);
 router.get('/:id', validateToken, getMethodById);
 
 // Ruta para crear un nuevo evento
-router.post('/', validateToken, postMethod);
+router.post('/', validateToken, validarUnaImagen, postMethod);
 
 // Ruta para actualizar un evento
 router.put('/:id', validateToken, updateMethod);
