@@ -17,13 +17,16 @@ const getDatosByCategoria = async (categoria) => {
 };
 
 const CreateDatos = async (datos) => {
-    const { nombre_comercio, descripcion_comercio, url_google, telefono, video_youtube, id_categoria } = datos;
+    const {
+        nombre_comercio, descripcion_comercio, url_google, telefono, video_youtube, id_categoria, id_usuario
+    } = datos;
+
     const [result] = await database.query(
-        'CALL Sp_CreateComercio(?,?,?,?,?,?)',
-        [nombre_comercio, descripcion_comercio, url_google, telefono, video_youtube, id_categoria]
+        'CALL Sp_CreateComercio(?,?,?,?,?,?,?)',
+        [nombre_comercio, descripcion_comercio, url_google, telefono, video_youtube, id_categoria, id_usuario]
     );
 
-    return result;  // Devuelve el resultado de la consulta que contiene affectedRows
+    return result;
 };
     
 const updateDatos = async (id, datos) => {

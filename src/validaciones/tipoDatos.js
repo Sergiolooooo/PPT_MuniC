@@ -30,30 +30,36 @@ class tipoDatos {
     }
 
     static validateAll(data) {
-        const { nombre_comercio, descripcion_comercio, url_google, telefono, video_youtube, id_categoria } = data;
-
+        const {
+            nombre_comercio, descripcion_comercio, url_google, telefono, video_youtube, id_categoria, id_usuario
+        } = data;
+    
         let validationResult;
-
+    
         validationResult = this.validateText(nombre_comercio);
         if (!validationResult.valid) return validationResult;
-
+    
         validationResult = this.validateText(descripcion_comercio);
         if (!validationResult.valid) return validationResult;
-
-        validationResult = this.validateText(url_google, "Url de google");
+    
+        validationResult = this.validateText(url_google);
         if (!validationResult.valid) return validationResult;
-
+    
         validationResult = this.validatePhone(telefono);
         if (!validationResult.valid) return validationResult;
-
+    
         validationResult = this.validateText(video_youtube);
         if (!validationResult.valid) return validationResult;
-
+    
         validationResult = this.validateId(id_categoria, "ID Categoría");
         if (!validationResult.valid) return validationResult;
-
+    
+        validationResult = this.validateId(id_usuario, "ID Usuario");
+        if (!validationResult.valid) return validationResult;
+    
         return { valid: true };
     }
+    
 }
 
 module.exports = tipoDatos;
