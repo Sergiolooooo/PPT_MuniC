@@ -1,45 +1,49 @@
 class TipoEvento {
-    static validateText(text,fieldName) {
+    static validateText(text, fieldName) {
         if (typeof text !== "string" || text.trim() === '') {
-            return { valid: false, error: `El campo ${fieldName} debe ser un texto válido y no estar vacío` };
+            return { valid: false, error: `${fieldName} debe ser un texto válido y no estar vacío` };
         }
         return { valid: true };
     }
 
-    static validateDatetime(datetime, fieldName) {
-        const regex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
-        if (!regex.test(datetime)) {
-            return { valid: false, error: `El campo ${fieldName} debe tener el formato YYYY-MM-DD HH:MM` };
+    static validateDate(date, fieldName) {
+        if (!date || isNaN(Date.parse(date))) {
+            return { valid: false, error: `${fieldName} debe ser una fecha válida` };
         }
         return { valid: true };
     }
-    
 
-  static validateId(id, fieldName) {
-      if (!Number.isInteger(Number(id)) || id <= 0) {
-          return { valid: false, error: `${fieldName} debe ser un número entero válido` };
-      }
-      return { valid: true };
-  }
+    static validateId(id, fieldName) {
+        if (!Number.isInteger(Number(id)) || Number(id) <= 0){
+            return { valid: false, error: `${fieldName} debe ser un número entero válido` };
+        }
+        return { valid: true };
+    }
 
-  static validateAll(data) {
-      const { nombre_evento, descripcion_evento, fecha_evento, fecha_fin, id_categoria } = data;
-      let validationResult;
+    static validateAll(data) {
+        const { nombre_evento, descripcion_evento, fecha_evento, fecha_fin, lugar, id_usuario } = data;
+        let v;
 
-      validationResult = this.validateText(nombre_evento, "nombre del evento");
-      if (!validationResult.valid) return validationResult;
+        v = this.validateText(nombre_evento, "Nombre del evento");
+        if (!v.valid) return v;
 
-      validationResult = this.validateText(descripcion_evento, "descripcion del evento");
-      if (!validationResult.valid) return validationResult;
+        v = this.validateText(descripcion_evento, "Descripción del evento");
+        if (!v.valid) return v;
 
-      validationResult = this.validateDatetime(fecha_evento, "fecha del evento");
-      if (!validationResult.valid) return validationResult;
+        v = this.validateDate(fecha_evento, "Fecha de inicio");
+        if (!v.valid) return v;
 
-      validationResult = this.validateDatetime(fecha_fin, "fecha fin del evento");
-      if (!validationResult.valid) return validationResult;
+        v = this.validateDate(fecha_fin, "Fecha de finalización");
+        if (!v.valid) return v;
 
-      return { valid: true };
-  }
+        v = this.validateText(lugar, "Lugar");
+        if (!v.valid) return v;
+
+        v = this.validateId(id_usuario, "ID de usuario");
+        if (!v.valid) return v;
+
+        return { valid: true };
+    }
 }
 
 module.exports = TipoEvento;

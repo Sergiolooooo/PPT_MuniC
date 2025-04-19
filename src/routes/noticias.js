@@ -11,7 +11,7 @@ const {
 
 const router = Router();
 
-//router.get('/', validateToken, getMethod); // Descomenta esta línea si quieres proteger la ruta con token
+// Descomenta esta línea si quieres proteger la ruta con token
 
 router.get('/', getMethod);
 router.get('/:id', getMethodById);

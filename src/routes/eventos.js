@@ -18,15 +18,15 @@ const router = Router();
 router.get('/', getMethod);
 
 // Ruta para obtener un evento por ID
-router.get('/:id', validateToken, getMethodById);
+router.get('/:id', getMethodById);
 
 // Ruta para crear un nuevo evento
-router.post('/', validateToken, validarUnaImagen, postMethod);
+router.post('/', validarUnaImagen, postMethod);
 
 // Ruta para actualizar un evento
-router.put('/:id', validateToken, updateMethod);
+router.put('/:id', validarUnaImagen, updateMethod);
 
 // Ruta para eliminar un evento
-router.delete('/:id', validateToken, deleteMethod);
+router.delete('/:id', deleteMethod);
 
 module.exports = router;

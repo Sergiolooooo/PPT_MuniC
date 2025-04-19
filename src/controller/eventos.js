@@ -40,7 +40,7 @@ const getMethodById = async (req, res) => {
 
 const postMethod = async (req, res) => {
     try {
-        // Verificar si req.body.data existe y convertirlo a JSON si es un string
+        // Parsear el body si es string
         if (req.body.data && typeof req.body.data === "string") {
             try {
                 req.body = JSON.parse(req.body.data);
@@ -54,18 +54,9 @@ const postMethod = async (req, res) => {
             req.body.imagen = req.file.buffer;
         }
 
+        // Convertir campos
         if (req.body.id_usuario) {
             req.body.id_usuario = parseInt(req.body.id_usuario);
-        }
-
-        if (req.body.fecha_evento) {
-            const fechaInicio = new Date(req.body.fecha_evento + " UTC");
-            req.body.fecha_evento = fechaInicio.toISOString().slice(0, 19).replace("T", " ");
-        }
-
-        if (req.body.fecha_fin) {
-            const fechaFin = new Date(req.body.fecha_fin + " UTC");
-            req.body.fecha_fin = fechaFin.toISOString().slice(0, 19).replace("T", " ");
         }
 
         // Validación
@@ -74,6 +65,7 @@ const postMethod = async (req, res) => {
             return res.status(400).json({ success: false, error: validation.error });
         }
 
+        // Guardar
         const resultado = await CreateEvento(req.body);
 
         if (resultado && resultado.affectedRows > 0) {
@@ -92,28 +84,53 @@ const postMethod = async (req, res) => {
 const updateMethod = async (req, res) => {
     try {
         const { id } = req.params;
-        const datosActualizados = req.body;
 
-        let validation = tiposDatos.validateId(id, "id");
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
-
-        validation = tiposDatos.validateAll(req.body);
-        if (!validation.valid) {
-            return res.status(400).json({ success: false, error: validation.error });
+        // Parsear body si viene como string
+        if (req.body.data && typeof req.body.data === "string") {
+            try {
+                req.body = JSON.parse(req.body.data);
+            } catch (jsonError) {
+                return res.status(400).json({ success: false, message: "Datos incorrectos" });
+            }
         }
-        const date = new Date(req.body.fecha_evento);
-        const fechaUTC = new Date(date + " UTC").toISOString().slice(0, 19).replace("T", " ");
-        req.body.fecha_evento = fechaUTC;
+
+        // Imagen opcional
+        if (req.file) {
+            req.body.imagen = req.file.buffer;
+        }
+
+        // Formatear fechas si existen
+        const fecha_evento = req.body.fecha_evento
+            ? new Date(req.body.fecha_evento + " UTC").toISOString().slice(0, 19).replace("T", " ")
+            : null;
+
+        const fecha_fin = req.body.fecha_fin
+            ? new Date(req.body.fecha_fin + " UTC").toISOString().slice(0, 19).replace("T", " ")
+            : null;
+
+        // Preparar objeto de actualización
+        const datosActualizados = {
+            nombre_evento: req.body.nombre_evento || null,
+            descripcion_evento: req.body.descripcion_evento || null,
+            fecha_evento,
+            fecha_fin,
+            lugar: req.body.lugar || null,
+            imagen: req.body.imagen || null
+        };
+
         const resultado = await updateEvento(id, datosActualizados);
+
         if (resultado && resultado.affectedRows > 0) {
-            res.status(200).json({ success: true, message: 'Evento actualizado exitosamente' });
+            return res.status(200).json({ success: true, message: "Evento actualizado exitosamente" });
         } else {
-            res.status(400).json({ success: false, message: 'Error al actualizar el evento o evento no encontrado' });
+            return res.status(400).json({ success: false, message: "No se actualizó ningún evento" });
         }
+
     } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
+        return res.status(500).json({ success: false, error: error.message });
     }
 };
+
 
 const deleteMethod = async (req, res) => {
     try {
