@@ -57,7 +57,6 @@ const postMethod = async (req, res) => {
 const getMethod = async (req, res) => {
     try {
         const imagenes = await getAlbumImagenes();
-        console.log(imagenes);
 
         if (imagenes.length > 0) {
             res.json({ success: true, data: imagenes });
@@ -68,6 +67,7 @@ const getMethod = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 // Obtener una imagen por ID
 const getMethodById = async (req, res) => {
@@ -87,25 +87,29 @@ const getMethodById = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
-// Obtener una imagen por id de un comercio
+
+// Obtener imágenes por ID de comercio
 const getMethodCommerceById = async (req, res) => {
     try {
         const { id } = req.params;
-        let validation = tiposDatos.validateId(id, "id");
-        if (!validation.valid) return res.status(200).json({ error: validation.error });
-        const imagen = await getAlbumImagenCommerceById(id);
+        const validation = tiposDatos.validateId(id, "id");
 
-        if (imagen.length !== 0) {
-            res.set('Content-Type', imagen[0].tipo_imagen);
-            res.json({ success: true, data: imagen });
-        } else {
-            res.json({ success: false, message: 'Imagenes del comercio no encontradas.' });
+        if (!validation.valid) {
+            return res.status(200).json({ error: validation.error });
         }
+
+        const imagenes = await getAlbumImagenCommerceById(id);
+
+        if (imagenes.length > 0) {
+            res.json({ success: true, data: imagenes });
+        } else {
+            res.status(404).json({ success: false, message: 'Imágenes del comercio no encontradas.' });
+        }
+
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
-
 // Actualizar una imagen
 const updateMethod = async (req, res) => {
     try {

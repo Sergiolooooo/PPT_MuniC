@@ -1,8 +1,26 @@
 const database = require('../database/mysql');
+const { getMimeType } = require('../utils/getMimeType');
 
 const getAlbumImagenes = async () => {
     const [[rows]] = await database.query('CALL Sp_GetAlbumImagenes();');
-    return rows; 
+
+    const imagenes = rows.map(imagen => {
+        if (imagen.datos_imagen && Buffer.isBuffer(imagen.datos_imagen)) {
+            const mimeType = getMimeType(imagen.datos_imagen);
+            const base64Image = imagen.datos_imagen.toString("base64");
+            imagen.imagen = `data:${mimeType};base64,${base64Image}`;
+        } else {
+            imagen.imagen = null;
+        }
+
+        // ❗ Asegúrate de ELIMINAR los campos crudos que ya no usás
+        delete imagen.datos_imagen;
+        delete imagen.tipo_imagen;
+
+        return imagen;
+    });
+
+    return imagenes;
 };
 
 const getAlbumImagenById = async (id) => {
@@ -12,7 +30,23 @@ const getAlbumImagenById = async (id) => {
 
 const getAlbumImagenCommerceById = async (id) => {
     const [[rows]] = await database.query('CALL Sp_GetCommerceByIdAlbumImagen(?);', [id]);
-    return rows;
+
+    const imagenes = rows.map(imagen => {
+        if (imagen.datos_imagen && Buffer.isBuffer(imagen.datos_imagen)) {
+            const mimeType = getMimeType(imagen.datos_imagen);
+            const base64Image = imagen.datos_imagen.toString("base64");
+            imagen.imagen = `data:${mimeType};base64,${base64Image}`;
+        } else {
+            imagen.imagen = null;
+        }
+
+        delete imagen.datos_imagen;
+        delete imagen.tipo_imagen;
+
+        return imagen;
+    });
+
+    return imagenes;
 };
 
 const createAlbumImagen = async (datos) => {
