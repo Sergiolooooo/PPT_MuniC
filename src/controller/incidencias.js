@@ -44,7 +44,6 @@ const getMethodIncidenciaById = async (req, res) => {
 const postMethodIncidencia = async (req, res) => {
     try {
 
-
         // Validar si body.data viene como string (por compatibilidad)
         if (req.body.data && typeof req.body.data === "string") {
             try {
@@ -67,6 +66,7 @@ const postMethodIncidencia = async (req, res) => {
             "nombre_reportante",
             "cedula_reportante",
             "telefono_reportante",
+            "descripcion_incidencia",
             "id_incidencia",
             "provincia",
             "canton",
@@ -74,7 +74,7 @@ const postMethodIncidencia = async (req, res) => {
             "direccion_exacta",
             "imagen"
         ];
-
+        
         // Detectar campos inesperados
         const camposRecibidos = Object.keys(req.body);
         const camposInesperados = camposRecibidos.filter(key => !camposEsperados.includes(key));
