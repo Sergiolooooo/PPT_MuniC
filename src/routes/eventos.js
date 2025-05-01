@@ -21,12 +21,12 @@ router.get('/', getMethod);
 router.get('/:id', getMethodById);
 
 // Ruta para crear un nuevo evento
-router.post('/', validarUnaImagen, postMethod);
+router.post('/', validarUnaImagen, validateToken, postMethod);
 
 // Ruta para actualizar un evento
-router.put('/:id', validarUnaImagen, updateMethod);
+router.put('/:id', validarUnaImagen, validateToken, updateMethod);
 
 // Ruta para eliminar un evento
-router.delete('/:id', deleteMethod);
+router.delete('/:id', validateToken, deleteMethod);
 
 module.exports = router;

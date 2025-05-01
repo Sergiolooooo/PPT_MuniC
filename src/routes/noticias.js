@@ -15,8 +15,8 @@ const router = Router();
 
 router.get('/', getMethod);
 router.get('/:id', getMethodById);
-router.post('/', validarUnaImagen, postMethod);
-router.put('/:id', validarUnaImagen,updateMethod);
-router.delete('/:id', deleteMethod);
+router.post('/', validarUnaImagen,validateToken, postMethod);
+router.put('/:id', validarUnaImagen, validateToken, updateMethod);
+router.delete('/:id', validateToken, deleteMethod);
 
 module.exports = router;
